@@ -20,6 +20,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.compose.PlayerSurface
+import com.yausername.ffmpeg.FFmpeg
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLRequest
 import dev.tobo.omneko.ui.theme.OmnekoTheme
@@ -32,7 +33,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        videoFile = File("$cacheDir/video")
+        videoFile = File("$cacheDir/video.mp4")
         videoFile?.delete()
 
         val appLinkIntent: Intent = intent
@@ -41,10 +42,13 @@ class MainActivity : ComponentActivity() {
 
         if (appLinkAction == Intent.ACTION_VIEW) {
             YoutubeDL.getInstance().init(this)
+            FFmpeg.getInstance().init(this)
+
             val request = YoutubeDLRequest(appLinkData.toString())
             request.addOption("-o", videoFile?.path ?: "")
-            YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, _ ->
-                println("$progress % (ETA $etaInSeconds)")
+            request.addOption("-S", "ext:mp4:m4a")
+            YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, text ->
+                println("$progress % (ETA $etaInSeconds) $text")
             }
         }
 
@@ -70,7 +74,7 @@ class MainActivity : ComponentActivity() {
             player?.repeatMode = Player.REPEAT_MODE_ALL
             player?.prepare()
         } else {
-            val toast = Toast.makeText(this, "No link was openend", Toast.LENGTH_SHORT)
+            val toast = Toast.makeText(this, "No link was opened", Toast.LENGTH_SHORT)
             toast.show()
         }
     }

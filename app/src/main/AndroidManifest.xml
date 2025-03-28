@@ -26,6 +26,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- TikTok intent filters -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -50,6 +52,40 @@
                 <data android:scheme="https" />
 
                 <data android:host="vm.tiktok.com" />
+            </intent-filter>
+
+            <!-- Youtube shorts intent filter -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+
+                <data android:host="youtube.com" />
+                <data android:host="www.youtube.com" />
+                <data android:host="m.youtube.com" />
+                <data android:host="youtu.be" />
+
+                <data android:pathPrefix="/shorts/" />
+            </intent-filter>
+
+            <!-- Instagram reel intent filter -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+
+                <data android:host="instagram.com" />
+                <data android:host="www.instagram.com" />
+
+                <data android:pathPrefix="/reel/" />
             </intent-filter>
         </activity>
     </application>
