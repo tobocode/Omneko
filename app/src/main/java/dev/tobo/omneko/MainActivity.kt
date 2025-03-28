@@ -1,17 +1,16 @@
 package dev.tobo.omneko
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.animation.core.RepeatMode
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -25,9 +24,6 @@ import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLRequest
 import dev.tobo.omneko.ui.theme.OmnekoTheme
 import java.io.File
-import java.util.concurrent.TimeUnit
-import android.content.Intent
-import android.widget.Toast
 
 class MainActivity : ComponentActivity() {
     var player: Player? = null
