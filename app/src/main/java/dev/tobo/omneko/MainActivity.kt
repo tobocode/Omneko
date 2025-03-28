@@ -26,6 +26,8 @@ import com.yausername.youtubedl_android.YoutubeDLRequest
 import dev.tobo.omneko.ui.theme.OmnekoTheme
 import java.io.File
 import java.util.concurrent.TimeUnit
+import android.content.Intent
+import android.widget.Toast
 
 class MainActivity : ComponentActivity() {
     var player: Player? = null
@@ -37,11 +39,17 @@ class MainActivity : ComponentActivity() {
         videoFile = File("$cacheDir/video")
         videoFile?.delete()
 
-        YoutubeDL.getInstance().init(this)
-        val request = YoutubeDLRequest("<video-link>")
-        request.addOption("-o", videoFile?.path ?: "")
-        YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, _ ->
-            println("$progress % (ETA $etaInSeconds)")
+        val appLinkIntent: Intent = intent
+        val appLinkAction: String? = appLinkIntent.action
+        val appLinkData: Uri? = appLinkIntent.data
+
+        if (appLinkAction == Intent.ACTION_VIEW) {
+            YoutubeDL.getInstance().init(this)
+            val request = YoutubeDLRequest(appLinkData.toString())
+            request.addOption("-o", videoFile?.path ?: "")
+            YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, _ ->
+                println("$progress % (ETA $etaInSeconds)")
+            }
         }
 
         enableEdgeToEdge()
@@ -60,10 +68,15 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
 
-        player = ExoPlayer.Builder(this).build()
-        player?.setMediaItem(MediaItem.fromUri(videoFile?.toUri() ?: Uri.EMPTY))
-        player?.repeatMode = Player.REPEAT_MODE_ALL
-        player?.prepare()
+        if (videoFile?.exists() == true) {
+            player = ExoPlayer.Builder(this).build()
+            player?.setMediaItem(MediaItem.fromUri(videoFile?.toUri() ?: Uri.EMPTY))
+            player?.repeatMode = Player.REPEAT_MODE_ALL
+            player?.prepare()
+        } else {
+            val toast = Toast.makeText(this, "No link was openend", Toast.LENGTH_SHORT)
+            toast.show()
+        }
     }
 
     override fun onPause() {
