@@ -11,6 +11,14 @@ Omneko ist a portmanteau of omniscient/omnipresent/omnipotent and neko, the japa
 The omni* part comes from it's ability to watch videos from numerous popular platforms.
 The cat part was chosen because cats have vertical pupils.
 
+## Features
+
+Currently, links to any of these platforms are supported:
+
+- TikTok
+- Youtube Shorts
+- Instagram Reels
+
 ## Installation and usage
 
 > [!NOTE]
