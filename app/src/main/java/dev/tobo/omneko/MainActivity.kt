@@ -7,12 +7,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -69,20 +74,31 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, videoFile: File?, player: Player? = null, viewModel: PlayerViewModel = viewModel()) {
     val context = LocalContext.current
+    val progress by viewModel.progress.collectAsState()
+    val completed by viewModel.completed.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.downloadAndPlayVideo(context, videoUri, videoFile, player)
     }
 
-    if (player != null) {
-        PlayerSurface(
-            player,
-            modifier.clickable {
-                player.playWhenReady = !player.playWhenReady
-            }
-        )
-    } else {
-        Surface(modifier.fillMaxSize()) {  }
+    Box(modifier) {
+        if (player != null) {
+            PlayerSurface(
+                player,
+                Modifier.clickable {
+                    player.playWhenReady = !player.playWhenReady
+                }
+            )
+        } else {
+            Surface(Modifier.fillMaxSize()) {  }
+        }
+
+        if (videoUri != null && videoFile != null &&!completed) {
+            CircularProgressIndicator(
+                progress = { progress },
+                Modifier.align(Alignment.Center)
+            )
+        }
     }
 }
 
