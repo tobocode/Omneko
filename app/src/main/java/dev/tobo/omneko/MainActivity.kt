@@ -9,14 +9,19 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,6 +31,7 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.compose.PlayerSurface
 import dev.tobo.omneko.ui.theme.OmnekoTheme
+import kotlinx.coroutines.delay
 import java.io.File
 
 class MainActivity : ComponentActivity() {
@@ -77,8 +83,17 @@ fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, videoFile: File?,
     val progress by viewModel.progress.collectAsState()
     val completed by viewModel.completed.collectAsState()
 
+    var videoProgress by remember { mutableFloatStateOf(0f) }
+
     LaunchedEffect(Unit) {
         viewModel.downloadAndPlayVideo(context, videoUri, videoFile, player)
+
+        while (true) {
+            delay(100)
+            if (player?.isCommandAvailable(Player.COMMAND_GET_CURRENT_MEDIA_ITEM) == true && player.isPlaying == true) {
+                videoProgress = player.contentPosition.toFloat() / player.duration.toFloat()
+            }
+        }
     }
 
     Box(modifier) {
@@ -92,6 +107,11 @@ fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, videoFile: File?,
         } else {
             Surface(Modifier.fillMaxSize()) {  }
         }
+
+        LinearProgressIndicator(
+            progress = { videoProgress },
+            Modifier.fillMaxWidth().align(Alignment.BottomStart)
+        )
 
         if (videoUri != null && videoFile != null &&!completed) {
             CircularProgressIndicator(
