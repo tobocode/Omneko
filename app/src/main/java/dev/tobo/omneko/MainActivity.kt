@@ -24,8 +24,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -110,7 +112,10 @@ fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, videoFile: File?,
 
         LinearProgressIndicator(
             progress = { videoProgress },
-            Modifier.fillMaxWidth().align(Alignment.BottomStart)
+            modifier = Modifier.fillMaxWidth().align(Alignment.BottomStart),
+            strokeCap = StrokeCap.Square,
+            gapSize = 0.dp,
+            drawStopIndicator = { }
         )
 
         if (videoUri != null && videoFile != null &&!completed) {
