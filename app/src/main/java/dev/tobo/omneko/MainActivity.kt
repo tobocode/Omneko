@@ -3,7 +3,6 @@ package dev.tobo.omneko
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -12,26 +11,26 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.net.toUri
-import androidx.media3.common.MediaItem
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.compose.PlayerSurface
-import com.yausername.ffmpeg.FFmpeg
-import com.yausername.youtubedl_android.YoutubeDL
-import com.yausername.youtubedl_android.YoutubeDLRequest
 import dev.tobo.omneko.ui.theme.OmnekoTheme
 import java.io.File
 
 class MainActivity : ComponentActivity() {
     var player: Player? = null
+    var videoUri: Uri? = null
     var videoFile: File? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        player = ExoPlayer.Builder(this).build()
 
         videoFile = File("$cacheDir/video.mp4")
         videoFile?.delete()
@@ -41,41 +40,16 @@ class MainActivity : ComponentActivity() {
         val appLinkData: Uri? = appLinkIntent.data
 
         if (appLinkAction == Intent.ACTION_VIEW) {
-            YoutubeDL.getInstance().init(this)
-            FFmpeg.getInstance().init(this)
-
-            val request = YoutubeDLRequest(appLinkData.toString())
-            request.addOption("-o", videoFile?.path ?: "")
-            request.addOption("-S", "ext:mp4:m4a")
-            YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, text ->
-                println("$progress % (ETA $etaInSeconds) $text")
-            }
+            videoUri = appLinkData
         }
 
         enableEdgeToEdge()
         setContent {
             OmnekoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    VideoPlayer(
-                        player = player,
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    VideoPlayer(Modifier.padding(innerPadding), videoUri, videoFile, player)
                 }
             }
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        if (videoFile?.exists() == true) {
-            player = ExoPlayer.Builder(this).build()
-            player?.setMediaItem(MediaItem.fromUri(videoFile?.toUri() ?: Uri.EMPTY))
-            player?.repeatMode = Player.REPEAT_MODE_ALL
-            player?.prepare()
-        } else {
-            val toast = Toast.makeText(this, "No link was opened", Toast.LENGTH_SHORT)
-            toast.show()
         }
     }
 
@@ -92,9 +66,15 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun VideoPlayer(player: Player? = null, modifier: Modifier = Modifier) {
+fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, videoFile: File?, player: Player? = null, viewModel: PlayerViewModel = viewModel()) {
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.downloadAndPlayVideo(context, videoUri, videoFile, player)
+    }
+
     PlayerSurface(
-        player ?: ExoPlayer.Builder(LocalContext.current).build(),
+        player ?: ExoPlayer.Builder(context).build(),
         modifier.clickable {
             player?.playWhenReady = !player.playWhenReady
         }
@@ -105,6 +85,6 @@ fun VideoPlayer(player: Player? = null, modifier: Modifier = Modifier) {
 @Composable
 fun PlayerPreview() {
     OmnekoTheme {
-        VideoPlayer()
+        VideoPlayer(Modifier, null, null, null)
     }
 }
