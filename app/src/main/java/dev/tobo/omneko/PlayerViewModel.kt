@@ -37,7 +37,7 @@ class PlayerViewModel : ViewModel() {
         }
 
         if (videoUri == null || videoFile == null) {
-            val toast = Toast.makeText(context, "No link was opened", Toast.LENGTH_SHORT)
+            val toast = Toast.makeText(context, "Invalid URL", Toast.LENGTH_SHORT)
             toast.show()
         } else {
             if (!_running.value && !_completed.value) {

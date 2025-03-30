@@ -3,6 +3,7 @@ package dev.tobo.omneko
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.webkit.URLUtil
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -28,6 +29,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -49,12 +51,17 @@ class MainActivity : ComponentActivity() {
         videoFile = File("$cacheDir/video.mp4")
         videoFile?.delete()
 
-        val appLinkIntent: Intent = intent
-        val appLinkAction: String? = appLinkIntent.action
-        val appLinkData: Uri? = appLinkIntent.data
+        when (intent.action) {
+            Intent.ACTION_VIEW -> videoUri = intent.data
+            Intent.ACTION_SEND -> {
+                if (intent.type == "text/plain") {
+                    val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
 
-        if (appLinkAction == Intent.ACTION_VIEW) {
-            videoUri = appLinkData
+                    if (URLUtil.isValidUrl(sharedText)) {
+                        videoUri = sharedText?.toUri()
+                    }
+                }
+            }
         }
 
         enableEdgeToEdge()
