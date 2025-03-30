@@ -31,3 +31,6 @@ As I don't control the domains whose links should be handled, the app cannot aut
 Luckily, the user can manually approve apps to handle certain links.
 To do that, after installing the app, you need to navigate to `Settings > Apps > Omneko > Open by default > Links to open in this app` and add all links which you want the app to handle.
 Now, clicking on any approved links should open the app instead of your default web browser.
+
+As some apps seem to not like opening links in their dedicated apps, you can use Androids sharing functionality as an alternative and share a link with the app.
+This will play the video in the same way as clicking on the link would.
