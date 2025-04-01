@@ -7,7 +7,7 @@ That way, when a friend sends you a video, you can watch it without the hassle o
 
 ### What does the name mean?
 
-Omneko ist a portmanteau of omniscient/omnipresent/omnipotent and neko, the japanese word for cat.
+Omneko is a portmanteau of omniscient/omnipresent/omnipotent and neko, the japanese word for cat.
 The omni* part comes from it's ability to watch videos from numerous popular platforms.
 The cat part was chosen because cats have vertical pupils.
 
