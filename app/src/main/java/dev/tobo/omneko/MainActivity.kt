@@ -89,7 +89,9 @@ fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, player: Player? =
     var videoProgress by remember { mutableFloatStateOf(0f) }
 
     LaunchedEffect(Unit) {
-        viewModel.downloadAndPlayVideo(context, videoUri, player)
+        if (player != null) {
+            viewModel.downloadAndPlayVideo(context, videoUri, player)
+        }
 
         while (true) {
             delay(100)

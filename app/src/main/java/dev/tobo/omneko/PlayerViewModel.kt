@@ -31,15 +31,9 @@ class PlayerViewModel : ViewModel() {
     private val _completed = MutableStateFlow(false)
     val completed: StateFlow<Boolean> = _completed.asStateFlow()
 
-    fun downloadAndPlayVideo(context: Context, videoUri: Uri?, player: Player?) {
+    fun downloadAndPlayVideo(context: Context, videoUri: Uri?, player: Player) {
         dataDir = File(context.cacheDir, "video")
         dataDir?.deleteRecursively()
-
-        if (player == null) {
-            val toast = Toast.makeText(context, "No player was specified", Toast.LENGTH_SHORT)
-            toast.show()
-            return
-        }
 
         if (videoUri == null || dataDir == null) {
             val toast = Toast.makeText(context, "Invalid URL", Toast.LENGTH_SHORT)
