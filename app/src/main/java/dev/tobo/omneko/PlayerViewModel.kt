@@ -20,6 +20,8 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 class PlayerViewModel : ViewModel() {
+    var dataDir: File? = null
+
     private val _progress = MutableStateFlow(0.0f)
     val progress: StateFlow<Float> = _progress.asStateFlow()
 
@@ -29,14 +31,17 @@ class PlayerViewModel : ViewModel() {
     private val _completed = MutableStateFlow(false)
     val completed: StateFlow<Boolean> = _completed.asStateFlow()
 
-    fun downloadAndPlayVideo(context: Context, videoUri: Uri?, videoFile: File?, player: Player?) {
+    fun downloadAndPlayVideo(context: Context, videoUri: Uri?, player: Player?) {
+        dataDir = File(context.cacheDir, "video")
+        dataDir?.deleteRecursively()
+
         if (player == null) {
             val toast = Toast.makeText(context, "No player was specified", Toast.LENGTH_SHORT)
             toast.show()
             return
         }
 
-        if (videoUri == null || videoFile == null) {
+        if (videoUri == null || dataDir == null) {
             val toast = Toast.makeText(context, "Invalid URL", Toast.LENGTH_SHORT)
             toast.show()
         } else {
@@ -48,15 +53,17 @@ class PlayerViewModel : ViewModel() {
                     FFmpeg.getInstance().init(context)
 
                     val request = YoutubeDLRequest(videoUri.toString())
-                    request.addOption("-o", videoFile.path)
-                    request.addOption("-S", "ext:mp4:m4a")
+                    request.addOption("-o", dataDir?.path + "/video")
+                    request.addOption("-S", "ext:mp4")
                     YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, text ->
                         println("$progress % (ETA $etaInSeconds) $text")
 
                         _progress.value = progress.coerceIn(0.0f, 100.0f) / 100.0f
                     }
 
-                    if (videoFile.exists() == true) {
+                    val videoFile = File(dataDir, "video.mp4")
+
+                    if (videoFile.exists()) {
                         withContext(Dispatchers.Main) {
                             player.setMediaItem(MediaItem.fromUri(videoFile.toUri()))
                             player.repeatMode = Player.REPEAT_MODE_ALL
@@ -69,5 +76,10 @@ class PlayerViewModel : ViewModel() {
                 }
             }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        dataDir?.deleteRecursively()
     }
 }

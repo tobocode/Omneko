@@ -36,20 +36,15 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.compose.PlayerSurface
 import dev.tobo.omneko.ui.theme.OmnekoTheme
 import kotlinx.coroutines.delay
-import java.io.File
 
 class MainActivity : ComponentActivity() {
     var player: Player? = null
     var videoUri: Uri? = null
-    var videoFile: File? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         player = ExoPlayer.Builder(this).build()
-
-        videoFile = File("$cacheDir/video.mp4")
-        videoFile?.delete()
 
         when (intent.action) {
             Intent.ACTION_VIEW -> videoUri = intent.data
@@ -68,7 +63,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             OmnekoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    VideoPlayer(Modifier.padding(innerPadding), videoUri, videoFile, player)
+                    VideoPlayer(Modifier.padding(innerPadding), videoUri, player)
                 }
             }
         }
@@ -82,12 +77,11 @@ class MainActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         player?.release()
-        videoFile?.delete()
     }
 }
 
 @Composable
-fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, videoFile: File?, player: Player? = null, viewModel: PlayerViewModel = viewModel()) {
+fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, player: Player? = null, viewModel: PlayerViewModel = viewModel()) {
     val context = LocalContext.current
     val progress by viewModel.progress.collectAsState()
     val completed by viewModel.completed.collectAsState()
@@ -95,7 +89,7 @@ fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, videoFile: File?,
     var videoProgress by remember { mutableFloatStateOf(0f) }
 
     LaunchedEffect(Unit) {
-        viewModel.downloadAndPlayVideo(context, videoUri, videoFile, player)
+        viewModel.downloadAndPlayVideo(context, videoUri, player)
 
         while (true) {
             delay(100)
@@ -125,7 +119,7 @@ fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, videoFile: File?,
             drawStopIndicator = { }
         )
 
-        if (videoUri != null && videoFile != null &&!completed) {
+        if (videoUri != null && !completed) {
             CircularProgressIndicator(
                 progress = { progress },
                 Modifier.align(Alignment.Center)
@@ -138,6 +132,6 @@ fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, videoFile: File?,
 @Composable
 fun PlayerPreview() {
     OmnekoTheme {
-        VideoPlayer(Modifier, null, null, null)
+        VideoPlayer(Modifier, null, null)
     }
 }
