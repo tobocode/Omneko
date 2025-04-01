@@ -53,7 +53,7 @@ class PlayerViewModel : ViewModel() {
                     FFmpeg.getInstance().init(context)
 
                     val request = YoutubeDLRequest(videoUri.toString())
-                    request.addOption("-o", dataDir?.path + "/video")
+                    request.addOption("-o", dataDir?.path + "/video.%(ext)s")
                     request.addOption("-S", "ext:mp4")
                     YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, text ->
                         println("$progress % (ETA $etaInSeconds) $text")
