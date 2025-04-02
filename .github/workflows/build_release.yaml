@@ -1,0 +1,67 @@
+name: Build and Release APK
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  build:
+    name: Build and sign APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Build release
+        run: gradle assembleRelease
+
+      - name: Rename APKs
+        run: |
+          mv app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/omneko-${{ github.ref_name }}-release.apk
+
+      - name: Sign APK
+        id: sign_app
+        uses: ilharp/sign-android-release@nightly
+        with:
+          releaseDir: app/build/outputs
+          signingKey: ${{ secrets.ANDROID_SIGNING_KEY }}
+          keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          buildToolsVersion: 35.0.0
+
+      - name: Calculate Checksums
+        run: |
+          checksum=`sha256sum app/build/outputs/omneko-${{ github.ref_name }}-release-signed.apk | awk '{ print $1 }'`
+          echo "APK_CHECKSUM=$checksum" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body: |
+            # Changelog
+
+            ## Checksums
+
+            | File | SHA-256 |
+            | ---- | ------- |
+            | omneko-${{ github.ref_name }}-release-signed.apk | ${{ env.APK_CHECKSUM }} |
+          draft: true
+          prerelease: ${{ contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') }}
+          files: app/build/outputs/omneko-${{ github.ref_name }}-release-signed.apk
+        
