@@ -47,10 +47,10 @@ jobs:
       - name: Rename APKs
         run: |
           mv app/build/outputs/apk/release/app-universal-release-unsigned-signed.apk app/build/outputs/omneko-${{ github.ref_name }}-universal-release.apk
-          mv app/build/outputs/apk/release/app-x86-release-unsigned.apk app/build/outputs/omneko-${{ github.ref_name }}-x86-release.apk
-          mv app/build/outputs/apk/release/app-x86_64-release-unsigned.apk app/build/outputs/omneko-${{ github.ref_name }}-x86_64-release.apk
-          mv app/build/outputs/apk/release/app-armeabi-v7a-release-unsigned.apk app/build/outputs/omneko-${{ github.ref_name }}-armeabi-v7a-release.apk
-          mv app/build/outputs/apk/release/app-arm64-v8a-release-unsigned.apk app/build/outputs/omneko-${{ github.ref_name }}-arm64-v8a-release.apk
+          mv app/build/outputs/apk/release/app-x86-release-unsigned-signed.apk app/build/outputs/omneko-${{ github.ref_name }}-x86-release.apk
+          mv app/build/outputs/apk/release/app-x86_64-release-unsigned-signed.apk app/build/outputs/omneko-${{ github.ref_name }}-x86_64-release.apk
+          mv app/build/outputs/apk/release/app-armeabi-v7a-release-unsigned-signed.apk app/build/outputs/omneko-${{ github.ref_name }}-armeabi-v7a-release.apk
+          mv app/build/outputs/apk/release/app-arm64-v8a-release-unsigned-signed.apk app/build/outputs/omneko-${{ github.ref_name }}-arm64-v8a-release.apk
 
       - name: Calculate checksums
         run: |
@@ -80,7 +80,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           body: |
-            # Changelog
+            ## Changelog
 
             ${{ steps.query-release-info.outputs.release-notes }}
 
