@@ -30,7 +30,7 @@ Installing it manually means that you need to download a new apk file each time 
 Obtanium automates all of that.
 
 > [!NOTE]
-> As the app is still in early development, there are currently only prereleases available.
+> As the app is still in early development, there are currently only pre-release versions available.
 > To make sure Obtanium can find the apk files, you need to enable **"Include prereleases"** in the app configuration
 
 ### Setup link handling
