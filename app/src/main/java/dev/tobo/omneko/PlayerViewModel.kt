@@ -10,6 +10,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import com.yausername.ffmpeg.FFmpeg
 import com.yausername.youtubedl_android.YoutubeDL
+import com.yausername.youtubedl_android.YoutubeDLException
 import com.yausername.youtubedl_android.YoutubeDLRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,16 +44,23 @@ class PlayerViewModel : ViewModel() {
                 viewModelScope.launch(Dispatchers.IO) {
                     _running.value = true
 
-                    YoutubeDL.getInstance().init(context)
-                    FFmpeg.getInstance().init(context)
+                    try {
+                        YoutubeDL.getInstance().init(context)
+                        FFmpeg.getInstance().init(context)
 
-                    val request = YoutubeDLRequest(videoUri.toString())
-                    request.addOption("-o", dataDir?.path + "/video.%(ext)s")
-                    request.addOption("-S", "ext:mp4")
-                    YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, text ->
-                        println("$progress % (ETA $etaInSeconds) $text")
+                        val request = YoutubeDLRequest(videoUri.toString())
+                        request.addOption("-o", dataDir?.path + "/video.%(ext)s")
+                        request.addOption("-S", "ext:mp4")
+                        YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, text ->
+                            println("$progress % (ETA $etaInSeconds) $text")
 
-                        _progress.value = progress.coerceIn(0.0f, 100.0f) / 100.0f
+                            _progress.value = progress.coerceIn(0.0f, 100.0f) / 100.0f
+                        }
+                    } catch (e: YoutubeDLException) {
+                        withContext(Dispatchers.Main) {
+                            val toast = Toast.makeText(context, "Unsupported URL or the video doesn't exist", Toast.LENGTH_LONG)
+                            toast.show()
+                        }
                     }
 
                     val videoFile = File(dataDir, "video.mp4")
