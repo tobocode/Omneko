@@ -25,13 +25,13 @@ You can download the app from the [releases page](https://github.com/tobocode/Om
 To install it manually, you need to download either the latest apk for your processor architecture or the universal apk if you're unsure about which to choose.
 But keep in mind that the universal apk has the largest size, as it supports each possible architecture.
 
-However, I recommend installing it with [Obtanium](https://github.com/ImranR98/Obtainium) to automatically get new updates.
+However, I recommend installing it with [Obtainium](https://github.com/ImranR98/Obtainium) to automatically get new updates.
 Installing it manually means that you need to download a new apk file each time an update is available, without getting notified about new updates.
-Obtanium automates all of that.
+Obtainium automates all of that.
 
 > [!NOTE]
 > As the app is still in early development, there are currently only pre-release versions available.
-> To make sure Obtanium can find the apk files, you need to enable **"Include prereleases"** in the app configuration
+> To make sure Obtainium can find the apk files, you need to enable **"Include prereleases"** in the app configuration
 
 ### Setup link handling
 
