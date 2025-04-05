@@ -1,5 +1,7 @@
 # Omneko
 
+[![Build and Release APK](https://github.com/tobocode/Omneko/actions/workflows/build_release.yaml/badge.svg)](https://github.com/tobocode/Omneko/actions/workflows/build_release.yaml)
+
 ## What is this?
 
 Omneko is a simple video player for Android, which allows you to watch vertical short-form videos of various popular platforms, without having to install their proprietary apps.
