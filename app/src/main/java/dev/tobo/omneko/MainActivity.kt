@@ -7,6 +7,7 @@ import android.webkit.URLUtil
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,19 +36,16 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.Player
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.compose.PlayerSurface
 import dev.tobo.omneko.ui.theme.OmnekoTheme
 import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
-    var player: Player? = null
+    val model: PlayerViewModel by viewModels()
     var videoUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        player = ExoPlayer.Builder(this).build()
 
         when (intent.action) {
             Intent.ACTION_VIEW -> videoUri = intent.data
@@ -66,7 +64,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             OmnekoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    VideoPlayer(Modifier.padding(innerPadding), videoUri, player)
+                    VideoPlayer(Modifier.padding(innerPadding), videoUri)
                 }
             }
         }
@@ -74,18 +72,16 @@ class MainActivity : ComponentActivity() {
 
     override fun onPause() {
         super.onPause()
-        player?.playWhenReady = false
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        player?.release()
+        model.player.value?.playWhenReady = false
     }
 }
 
 @Composable
-fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, player: Player? = null, viewModel: PlayerViewModel = viewModel()) {
+fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
     val context = LocalContext.current
+
+    val player by viewModel.player.collectAsState()
+
     val progress by viewModel.progress.collectAsState()
     val completed by viewModel.completed.collectAsState()
 
@@ -95,28 +91,31 @@ fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, player: Player? =
     var videoProgress by remember { mutableFloatStateOf(0f) }
 
     LaunchedEffect(Unit) {
-        if (player != null) {
-            viewModel.downloadAndPlayVideo(context, videoUri, player)
-        }
+        viewModel.downloadAndPlayVideo(context, videoUri)
 
         while (true) {
             delay(100)
-            if (player?.isCommandAvailable(Player.COMMAND_GET_CURRENT_MEDIA_ITEM) == true && player.isPlaying == true) {
-                videoProgress = player.contentPosition.toFloat() / player.duration.toFloat()
+
+            if (player != null) {
+                if (player!!.isCommandAvailable(Player.COMMAND_GET_CURRENT_MEDIA_ITEM) == true && player!!.isPlaying == true) {
+                    videoProgress = player!!.contentPosition.toFloat() / player!!.duration.toFloat()
+                }
             }
         }
     }
 
     Box(modifier) {
-        if (player != null) {
-            PlayerSurface(
-                player,
-                Modifier.clickable {
-                    player.playWhenReady = !player.playWhenReady
-                }
-            )
-        } else {
+        if (player == null) {
             Surface(Modifier.fillMaxSize()) {  }
+        } else {
+            player?.let {
+                PlayerSurface(
+                    it,
+                    Modifier.clickable {
+                        player!!.playWhenReady = !player!!.playWhenReady
+                    }
+                )
+            }
         }
 
         Column(modifier = Modifier.align(Alignment.BottomStart)) {
@@ -158,6 +157,6 @@ fun InfoBox(channel: String, title: String) {
 @Composable
 fun PlayerPreview() {
     OmnekoTheme {
-        VideoPlayer(Modifier, null, null)
+        VideoPlayer(Modifier, null)
     }
 }

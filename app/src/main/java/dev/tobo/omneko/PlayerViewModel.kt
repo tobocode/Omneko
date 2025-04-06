@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
 import com.yausername.ffmpeg.FFmpeg
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLException
@@ -26,6 +27,9 @@ import java.io.File
 class PlayerViewModel : ViewModel() {
     var dataDir: File? = null
 
+    private val _player: MutableStateFlow<Player?> = MutableStateFlow(null)
+    val player: StateFlow<Player?> = _player.asStateFlow()
+
     private val _progress = MutableStateFlow(0.0f)
     val progress: StateFlow<Float> = _progress.asStateFlow()
 
@@ -41,18 +45,22 @@ class PlayerViewModel : ViewModel() {
     private val _title = MutableStateFlow("Video Title")
     val title: StateFlow<String> = _title.asStateFlow()
 
-    fun downloadAndPlayVideo(context: Context, videoUri: Uri?, player: Player) {
-        _channel.value = ""
-        _title.value = ""
+    fun downloadAndPlayVideo(context: Context, videoUri: Uri?) {
+        if (_player.value == null) {
+            _player.value = ExoPlayer.Builder(context).build()
+        }
 
-        dataDir = File(context.cacheDir, "video")
-        dataDir?.deleteRecursively()
+        if (!_running.value && !_completed.value) {
+            _channel.value = ""
+            _title.value = ""
 
-        if (videoUri == null || dataDir == null) {
-            val toast = Toast.makeText(context, "Invalid URL", Toast.LENGTH_SHORT)
-            toast.show()
-        } else {
-            if (!_running.value && !_completed.value) {
+            dataDir = File(context.cacheDir, "video")
+            dataDir?.deleteRecursively()
+
+            if (videoUri == null || dataDir == null) {
+                val toast = Toast.makeText(context, "Invalid URL", Toast.LENGTH_SHORT)
+                toast.show()
+            } else {
                 viewModelScope.launch(Dispatchers.IO) {
                     _running.value = true
 
@@ -88,9 +96,9 @@ class PlayerViewModel : ViewModel() {
                     val videoFile = File(dataDir, "video.mp4")
                     if (videoFile.exists()) {
                         withContext(Dispatchers.Main) {
-                            player.setMediaItem(MediaItem.fromUri(videoFile.toUri()))
-                            player.repeatMode = Player.REPEAT_MODE_ALL
-                            player.prepare()
+                            _player.value?.setMediaItem(MediaItem.fromUri(videoFile.toUri()))
+                            _player.value?.repeatMode = Player.REPEAT_MODE_ALL
+                            _player.value?.prepare()
                         }
                     }
 
@@ -103,6 +111,7 @@ class PlayerViewModel : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
+        _player.value?.release()
         dataDir?.deleteRecursively()
     }
 }

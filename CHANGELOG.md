@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Show video title and channel on the bottom
 
+### Fixed
+
+- Fix video player being destroyed when the Activity is recreated
+
 ## [1.0.0-alpha.2] - 2025-04-04
 
 ### Fixed
