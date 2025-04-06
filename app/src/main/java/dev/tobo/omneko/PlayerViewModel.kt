@@ -35,10 +35,14 @@ class PlayerViewModel : ViewModel() {
     private val _completed = MutableStateFlow(false)
     val completed: StateFlow<Boolean> = _completed.asStateFlow()
 
+    private val _channel = MutableStateFlow("Channel")
+    val channel: StateFlow<String> = _channel.asStateFlow()
+
     private val _title = MutableStateFlow("Video Title")
     val title: StateFlow<String> = _title.asStateFlow()
 
     fun downloadAndPlayVideo(context: Context, videoUri: Uri?, player: Player) {
+        _channel.value = ""
         _title.value = ""
 
         dataDir = File(context.cacheDir, "video")
@@ -76,6 +80,8 @@ class PlayerViewModel : ViewModel() {
                     if (infoFile.exists()) {
                         val json = Json { ignoreUnknownKeys = true }
                         val jsonObject = json.parseToJsonElement(infoFile.readText()).jsonObject
+
+                        _channel.value = jsonObject["channel"]?.jsonPrimitive?.content ?: ""
                         _title.value = jsonObject["title"]?.jsonPrimitive?.content ?: ""
                     }
 

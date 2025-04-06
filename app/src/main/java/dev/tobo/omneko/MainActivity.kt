@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -87,6 +88,8 @@ fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, player: Player? =
     val context = LocalContext.current
     val progress by viewModel.progress.collectAsState()
     val completed by viewModel.completed.collectAsState()
+
+    val channel by viewModel.channel.collectAsState()
     val title by viewModel.title.collectAsState()
 
     var videoProgress by remember { mutableFloatStateOf(0f) }
@@ -117,10 +120,7 @@ fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, player: Player? =
         }
 
         Column(modifier = Modifier.align(Alignment.BottomStart)) {
-            Text(
-                title,
-                modifier = Modifier.padding(10.dp)
-            )
+            InfoBox(channel, title)
 
             LinearProgressIndicator(
                 progress = { videoProgress },
@@ -138,6 +138,20 @@ fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, player: Player? =
             )
         }
     }
+}
+
+@Composable
+fun InfoBox(channel: String, title: String) {
+    Text(
+        channel,
+        fontWeight = FontWeight.Black,
+        modifier = Modifier.padding(start = 10.dp, bottom = 5.dp)
+    )
+
+    Text(
+        title,
+        modifier = Modifier.padding(start = 10.dp, bottom = 10.dp)
+    )
 }
 
 @Preview(showBackground = true)
