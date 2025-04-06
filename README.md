@@ -46,3 +46,8 @@ Now, clicking on any approved links should open the app instead of your default 
 
 As some apps seem to not like opening links in their dedicated apps, you can use Androids sharing functionality as an alternative and share a link with the app.
 This will play the video in the same way as clicking on the link would.
+
+### Updating YoutubeDL
+
+The first time the app is started, it will automatically update YoutubeDL to the latest stable version.
+If you encounter problems watching videos from platforms that previously worked, you can manually update YoutubeDL again in the main screen.
