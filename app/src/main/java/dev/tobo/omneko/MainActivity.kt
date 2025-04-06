@@ -1,6 +1,8 @@
 package dev.tobo.omneko
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.webkit.URLUtil
@@ -44,6 +46,7 @@ class MainActivity : ComponentActivity() {
     val model: PlayerViewModel by viewModels()
     var videoUri: Uri? = null
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -61,6 +64,8 @@ class MainActivity : ComponentActivity() {
         }
 
         enableEdgeToEdge()
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
         setContent {
             OmnekoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->

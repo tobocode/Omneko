@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Show video title and channel on the bottom
 
+### Changed
+
+- Lock screen orientation to portrait mode
+
 ### Fixed
 
 - Fix video player being destroyed when the Activity is recreated
