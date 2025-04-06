@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - New main screen when opening the app from the launcher
 - Button for updating YoutubeDL
+- Automatic update for YoutubeDL when the app ist launched for the first time
 
 ## [1.0.0-alpha.3] - 2025-04-06
 
