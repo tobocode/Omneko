@@ -12,8 +12,8 @@ android {
         applicationId = "dev.tobo.omneko"
         minSdk = 26
         targetSdk = 35
-        versionCode = 3
-        versionName = "1.0.0-alpha.3"
+        versionCode = 4
+        versionName = "1.0.0-alpha.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
