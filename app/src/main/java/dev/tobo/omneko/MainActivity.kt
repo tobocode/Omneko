@@ -1,6 +1,7 @@
 package dev.tobo.omneko
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -17,13 +18,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.edit
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.preference.PreferenceManager
 import dev.tobo.omneko.ui.theme.OmnekoTheme
 
 class MainActivity : ComponentActivity() {
@@ -41,6 +45,21 @@ class MainActivity : ComponentActivity() {
 fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewModel()) {
     val context = LocalContext.current
     val updating by viewModel.updating.collectAsState()
+
+    LaunchedEffect(Unit) {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+
+        if (preferences.getBoolean("firstRun", true)) {
+            val toast = Toast.makeText(context, "First run, updating YoutubeDL", Toast.LENGTH_SHORT)
+            toast.show()
+
+            preferences.edit {
+                putBoolean("firstRun", false)
+            }
+
+            viewModel.updateYoutubeDL(context)
+        }
+    }
 
     OmnekoTheme {
         Scaffold(
