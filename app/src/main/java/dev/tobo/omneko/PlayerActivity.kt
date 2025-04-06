@@ -42,7 +42,7 @@ import androidx.media3.ui.compose.PlayerSurface
 import dev.tobo.omneko.ui.theme.OmnekoTheme
 import kotlinx.coroutines.delay
 
-class MainActivity : ComponentActivity() {
+class PlayerActivity : ComponentActivity() {
     val model: PlayerViewModel by viewModels()
     var videoUri: Uri? = null
 
