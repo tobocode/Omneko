@@ -12,16 +12,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.tobo.omneko.ui.theme.OmnekoTheme
 
 class MainActivity : ComponentActivity() {
@@ -36,7 +38,10 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainLayout(modifier: Modifier = Modifier) {
+fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewModel()) {
+    val context = LocalContext.current
+    val updating by viewModel.updating.collectAsState()
+
     OmnekoTheme {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -59,14 +64,13 @@ fun MainLayout(modifier: Modifier = Modifier) {
                 Text("If you have trouble watching videos, try updating YoutubeDL")
 
                 Button(modifier = Modifier.fillMaxWidth(),
-                    onClick = {}) {
+                    enabled = !updating,
+                    onClick = {
+                        viewModel.updateYoutubeDL(context)
+                    }) {
+
                     Text("Update YoutubeDL")
                 }
-
-                LinearProgressIndicator(
-                    progress = { 0.66f },
-                    modifier = Modifier.fillMaxWidth()
-                )
             }
         }
     }
@@ -74,6 +78,6 @@ fun MainLayout(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun LayoutPreview() {
     MainLayout()
 }

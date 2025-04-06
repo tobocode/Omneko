@@ -79,7 +79,7 @@ class PlayerViewModel : ViewModel() {
                         }
                     } catch (e: YoutubeDLException) {
                         withContext(Dispatchers.Main) {
-                            val toast = Toast.makeText(context, "Unsupported URL or the video doesn't exist", Toast.LENGTH_LONG)
+                            val toast = Toast.makeText(context, "Unsupported URL, the video doesn't exist or YoutubeDL is out of date", Toast.LENGTH_LONG)
                             toast.show()
                         }
                     }
