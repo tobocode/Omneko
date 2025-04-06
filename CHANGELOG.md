@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Button for updating YoutubeDL
 - Automatic update for YoutubeDL when the app ist launched for the first time
 
-## Fixed
+### Fixed
 
 - Fix Instagram Reels not working due to YoutubeDL being outdated
 
