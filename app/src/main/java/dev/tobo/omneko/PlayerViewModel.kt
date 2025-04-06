@@ -18,6 +18,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import java.io.File
 
 class PlayerViewModel : ViewModel() {
@@ -32,7 +35,12 @@ class PlayerViewModel : ViewModel() {
     private val _completed = MutableStateFlow(false)
     val completed: StateFlow<Boolean> = _completed.asStateFlow()
 
+    private val _title = MutableStateFlow("Video Title")
+    val title: StateFlow<String> = _title.asStateFlow()
+
     fun downloadAndPlayVideo(context: Context, videoUri: Uri?, player: Player) {
+        _title.value = ""
+
         dataDir = File(context.cacheDir, "video")
         dataDir?.deleteRecursively()
 
@@ -51,6 +59,7 @@ class PlayerViewModel : ViewModel() {
                         val request = YoutubeDLRequest(videoUri.toString())
                         request.addOption("-o", dataDir?.path + "/video.%(ext)s")
                         request.addOption("-S", "ext:mp4")
+                        request.addOption("--write-comments")
                         YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, text ->
                             println("$progress % (ETA $etaInSeconds) $text")
 
@@ -63,8 +72,14 @@ class PlayerViewModel : ViewModel() {
                         }
                     }
 
-                    val videoFile = File(dataDir, "video.mp4")
+                    val infoFile = File(dataDir, "video.info.json")
+                    if (infoFile.exists()) {
+                        val json = Json { ignoreUnknownKeys = true }
+                        val jsonObject = json.parseToJsonElement(infoFile.readText()).jsonObject
+                        _title.value = jsonObject["title"]?.jsonPrimitive?.content ?: ""
+                    }
 
+                    val videoFile = File(dataDir, "video.mp4")
                     if (videoFile.exists()) {
                         withContext(Dispatchers.Main) {
                             player.setMediaItem(MediaItem.fromUri(videoFile.toUri()))
