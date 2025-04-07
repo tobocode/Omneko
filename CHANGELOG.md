@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Change splash screen background to a dark color when night mode is enabled
+
 ### Fixed
 
 - Fix text not readable in light mode
