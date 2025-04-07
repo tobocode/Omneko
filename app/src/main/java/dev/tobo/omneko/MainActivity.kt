@@ -1,6 +1,9 @@
 package dev.tobo.omneko
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
+import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.preference.PreferenceManager
 import dev.tobo.omneko.ui.theme.OmnekoTheme
@@ -89,6 +93,20 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                     }) {
 
                     Text("Update YoutubeDL")
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    Text("Here you can configure what links should automatically be opened")
+
+                    Button(modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+                            val intent = Intent(Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS)
+                            intent.data = "package:${context.packageName}".toUri()
+                            context.startActivity(intent)
+                        }) {
+
+                        Text("Configure link handling")
+                    }
                 }
             }
         }
