@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Button for easy access to the link association settings page
+
 ### Changed
 
 - Change splash screen background to a dark color when night mode is enabled
