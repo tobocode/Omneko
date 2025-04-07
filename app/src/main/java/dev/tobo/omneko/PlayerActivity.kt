@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -67,11 +68,7 @@ class PlayerActivity : ComponentActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         setContent {
-            OmnekoTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    VideoPlayer(Modifier.padding(innerPadding), videoUri)
-                }
-            }
+            VideoPlayer(videoUri)
         }
     }
 
@@ -82,7 +79,7 @@ class PlayerActivity : ComponentActivity() {
 }
 
 @Composable
-fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
+fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
     val context = LocalContext.current
 
     val player by viewModel.player.collectAsState()
@@ -109,37 +106,41 @@ fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, viewModel: Player
         }
     }
 
-    Box(modifier) {
-        if (player == null) {
-            Surface(Modifier.fillMaxSize()) {  }
-        } else {
-            player?.let {
-                PlayerSurface(
-                    it,
-                    Modifier.clickable {
-                        player!!.playWhenReady = !player!!.playWhenReady
+    OmnekoTheme {
+        Scaffold(modifier = Modifier.fillMaxSize(), containerColor = Color.Black) { innerPadding ->
+            Box(Modifier.padding(innerPadding)) {
+                if (player == null) {
+                    Surface(Modifier.fillMaxSize(), color = Color.Black) {  }
+                } else {
+                    player?.let {
+                        PlayerSurface(
+                            it,
+                            Modifier.clickable {
+                                player!!.playWhenReady = !player!!.playWhenReady
+                            }
+                        )
                     }
-                )
+                }
+
+                Column(modifier = Modifier.align(Alignment.BottomStart)) {
+                    InfoBox(channel, title)
+
+                    LinearProgressIndicator(
+                        progress = { videoProgress },
+                        modifier = Modifier.fillMaxWidth(),
+                        strokeCap = StrokeCap.Square,
+                        gapSize = 0.dp,
+                        drawStopIndicator = { }
+                    )
+                }
+
+                if (videoUri != null && !completed) {
+                    CircularProgressIndicator(
+                        progress = { progress },
+                        Modifier.align(Alignment.Center)
+                    )
+                }
             }
-        }
-
-        Column(modifier = Modifier.align(Alignment.BottomStart)) {
-            InfoBox(channel, title)
-
-            LinearProgressIndicator(
-                progress = { videoProgress },
-                modifier = Modifier.fillMaxWidth(),
-                strokeCap = StrokeCap.Square,
-                gapSize = 0.dp,
-                drawStopIndicator = { }
-            )
-        }
-
-        if (videoUri != null && !completed) {
-            CircularProgressIndicator(
-                progress = { progress },
-                Modifier.align(Alignment.Center)
-            )
         }
     }
 }
@@ -148,12 +149,14 @@ fun VideoPlayer(modifier: Modifier = Modifier, videoUri: Uri?, viewModel: Player
 fun InfoBox(channel: String, title: String) {
     Text(
         channel,
+        color = Color.White,
         fontWeight = FontWeight.Black,
         modifier = Modifier.padding(start = 10.dp, bottom = 5.dp)
     )
 
     Text(
         title,
+        color = Color.White,
         modifier = Modifier.padding(start = 10.dp, bottom = 10.dp)
     )
 }
@@ -161,7 +164,5 @@ fun InfoBox(channel: String, title: String) {
 @Preview(showBackground = true)
 @Composable
 fun PlayerPreview() {
-    OmnekoTheme {
-        VideoPlayer(Modifier, null)
-    }
+    VideoPlayer(null)
 }
