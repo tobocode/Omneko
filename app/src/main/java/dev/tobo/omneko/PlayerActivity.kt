@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -41,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -128,10 +130,13 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
                 Column(modifier = Modifier.align(Alignment.BottomStart)) {
                     Row() {
                         InfoBox(modifier = Modifier.align(Alignment.Bottom).weight(1.0f), playerState.channel, playerState.title)
-                        
+
                         Column(modifier = Modifier.padding(10.dp)) {
-                            StackButton(enabled = true)
-                            StackButton(enabled = false)
+                            StackButton(modifier = Modifier, Icons.Filled.Info, "Info", enabled = false) { }
+                            StackButton(modifier = Modifier, Icons.Filled.Settings, "Settings") {
+                                val intent = Intent(context, MainActivity::class.java)
+                                context.startActivity(intent)
+                            }
                         }
                     }
 
@@ -171,21 +176,21 @@ fun InfoBox(modifier: Modifier = Modifier, channel: String, title: String) {
 }
 
 @Composable
-fun StackButton(modifier: Modifier = Modifier, enabled: Boolean = true) {
+fun StackButton(modifier: Modifier = Modifier, icon: ImageVector, iconDescription: String, enabled: Boolean = true, onClick: () -> Unit) {
     IconButton(
         enabled = enabled,
-        modifier = Modifier.padding(8.dp).size(55.dp),
+        modifier = modifier.padding(8.dp).size(55.dp),
         colors = IconButtonDefaults.iconButtonColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
             disabledContainerColor = Color(0x66222222),
             contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
             disabledContentColor = Color(0xFF666666)
         ),
-        onClick = { }
+        onClick = onClick
     ) {
         Icon(
-            Icons.Filled.Settings,
-            contentDescription = "Settings",
+            icon,
+            contentDescription = iconDescription,
             modifier = Modifier.size(40.dp)
         )
     }

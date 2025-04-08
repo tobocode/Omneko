@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Button for easy access to the link association settings page
+- Settings button on the video player activity
 
 ### Changed
 
