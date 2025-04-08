@@ -41,7 +41,8 @@ Due to security related changes in Android 12, [any links will be opened in the 
 As I don't control the domains whose links should be handled, the app cannot automatically register itself for those links.
 
 Luckily, you can manually approve apps to handle certain links.
-To do that, after installing the app, you need to navigate to `Settings > Apps > Omneko > Open by default > Links to open in this app` and add all links which you want the app to handle.
+To do that, you can open the app and click the **Configure link handling** button, which will automatically navigate you to the correct settings page, where you can add all the links which you want the app to handle.
+Alternatively, you can also manually navigate to `Settings > Apps > Omneko > Open by default > Links to open in this app`.
 Now, clicking on any approved links should open the app instead of your default web browser.
 
 As some apps seem to not like opening links in their dedicated apps, you can use Androids sharing functionality as an alternative and share a link with the app.
