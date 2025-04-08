@@ -3,6 +3,7 @@ package dev.tobo.omneko
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.webkit.URLUtil
@@ -13,11 +14,19 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -117,7 +126,14 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
                 }
 
                 Column(modifier = Modifier.align(Alignment.BottomStart)) {
-                    InfoBox(playerState.channel, playerState.title)
+                    Row() {
+                        InfoBox(modifier = Modifier.align(Alignment.Bottom).weight(1.0f), playerState.channel, playerState.title)
+                        
+                        Column(modifier = Modifier.padding(10.dp)) {
+                            StackButton(enabled = true)
+                            StackButton(enabled = false)
+                        }
+                    }
 
                     LinearProgressIndicator(
                         progress = { videoProgress },
@@ -129,18 +145,7 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
                 }
 
                 if (videoUri != null && !playerState.completed) {
-                    Column(modifier = Modifier.align(Alignment.Center)) {
-                        CircularProgressIndicator(
-                            progress = { playerState.progress },
-                            modifier = Modifier.align(Alignment.CenterHorizontally).padding(bottom = 10.dp)
-                        )
-
-                        Text(
-                            "Downloading video",
-                            color = Color.White,
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
-                        )
-                    }
+                    LabeledProgress(modifier = Modifier.align(Alignment.Center), playerState.progress)
                 }
             }
         }
@@ -148,22 +153,62 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
 }
 
 @Composable
-fun InfoBox(channel: String, title: String) {
-    Text(
-        channel,
-        color = Color.White,
-        fontWeight = FontWeight.Black,
-        modifier = Modifier.padding(start = 10.dp, bottom = 5.dp)
-    )
+fun InfoBox(modifier: Modifier = Modifier, channel: String, title: String) {
+    Column(modifier = modifier) {
+        Text(
+            channel,
+            color = Color.White,
+            fontWeight = FontWeight.Black,
+            modifier = Modifier.padding(start = 10.dp, bottom = 5.dp)
+        )
 
-    Text(
-        title,
-        color = Color.White,
-        modifier = Modifier.padding(start = 10.dp, bottom = 10.dp)
-    )
+        Text(
+            title,
+            color = Color.White,
+            modifier = Modifier.padding(start = 10.dp, bottom = 10.dp)
+        )
+    }
 }
 
-@Preview(showBackground = true)
+@Composable
+fun StackButton(modifier: Modifier = Modifier, enabled: Boolean = true) {
+    IconButton(
+        enabled = enabled,
+        modifier = Modifier.padding(8.dp).size(55.dp),
+        colors = IconButtonDefaults.iconButtonColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            disabledContainerColor = Color(0x66222222),
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            disabledContentColor = Color(0xFF666666)
+        ),
+        onClick = { }
+    ) {
+        Icon(
+            Icons.Filled.Settings,
+            contentDescription = "Settings",
+            modifier = Modifier.size(40.dp)
+        )
+    }
+}
+
+@Composable
+fun LabeledProgress(modifier: Modifier = Modifier, progress: Float) {
+    Column(modifier = modifier) {
+        CircularProgressIndicator(
+            progress = { progress },
+            modifier = Modifier.align(Alignment.CenterHorizontally).padding(bottom = 10.dp)
+        )
+
+        Text(
+            "Downloading video",
+            color = Color.White,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+    }
+}
+
+@Preview(name = "Dark mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "Light mode", showBackground = true)
 @Composable
 fun PlayerPreview() {
     VideoPlayer(null)
