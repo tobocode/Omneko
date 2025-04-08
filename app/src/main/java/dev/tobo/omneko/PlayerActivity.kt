@@ -129,10 +129,18 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
                 }
 
                 if (videoUri != null && !playerState.completed) {
-                    CircularProgressIndicator(
-                        progress = { playerState.progress },
-                        Modifier.align(Alignment.Center)
-                    )
+                    Column(modifier = Modifier.align(Alignment.Center)) {
+                        CircularProgressIndicator(
+                            progress = { playerState.progress },
+                            modifier = Modifier.align(Alignment.CenterHorizontally).padding(bottom = 10.dp)
+                        )
+
+                        Text(
+                            "Downloading video",
+                            color = Color.White,
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                    }
                 }
             }
         }
