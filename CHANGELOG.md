@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Change splash screen background to a dark color when night mode is enabled
+- Move PlayerViewModel data into a separate data class
 
 ### Fixed
 
