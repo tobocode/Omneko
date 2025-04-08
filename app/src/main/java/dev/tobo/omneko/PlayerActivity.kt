@@ -74,7 +74,7 @@ class PlayerActivity : ComponentActivity() {
 
     override fun onPause() {
         super.onPause()
-        model.player.value?.playWhenReady = false
+        model.playerState.value.player?.playWhenReady = false
     }
 }
 
@@ -82,13 +82,7 @@ class PlayerActivity : ComponentActivity() {
 fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
     val context = LocalContext.current
 
-    val player by viewModel.player.collectAsState()
-
-    val progress by viewModel.progress.collectAsState()
-    val completed by viewModel.completed.collectAsState()
-
-    val channel by viewModel.channel.collectAsState()
-    val title by viewModel.title.collectAsState()
+    val playerState by viewModel.playerState.collectAsState()
 
     var videoProgress by remember { mutableFloatStateOf(0f) }
 
@@ -98,9 +92,9 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
         while (true) {
             delay(100)
 
-            if (player != null) {
-                if (player!!.isCommandAvailable(Player.COMMAND_GET_CURRENT_MEDIA_ITEM) == true && player!!.isPlaying == true) {
-                    videoProgress = player!!.contentPosition.toFloat() / player!!.duration.toFloat()
+            if (playerState.player != null) {
+                if (playerState.player!!.isCommandAvailable(Player.COMMAND_GET_CURRENT_MEDIA_ITEM) == true && playerState.player!!.isPlaying == true) {
+                    videoProgress = playerState.player!!.contentPosition.toFloat() / playerState.player!!.duration.toFloat()
                 }
             }
         }
@@ -109,21 +103,21 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
     OmnekoTheme {
         Scaffold(modifier = Modifier.fillMaxSize(), containerColor = Color.Black) { innerPadding ->
             Box(Modifier.padding(innerPadding)) {
-                if (player == null) {
+                if (playerState.player == null) {
                     Surface(Modifier.fillMaxSize(), color = Color.Black) {  }
                 } else {
-                    player?.let {
+                    playerState.player?.let {
                         PlayerSurface(
                             it,
                             Modifier.clickable {
-                                player!!.playWhenReady = !player!!.playWhenReady
+                                playerState.player!!.playWhenReady = !playerState.player!!.playWhenReady
                             }
                         )
                     }
                 }
 
                 Column(modifier = Modifier.align(Alignment.BottomStart)) {
-                    InfoBox(channel, title)
+                    InfoBox(playerState.channel, playerState.title)
 
                     LinearProgressIndicator(
                         progress = { videoProgress },
@@ -134,9 +128,9 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
                     )
                 }
 
-                if (videoUri != null && !completed) {
+                if (videoUri != null && !playerState.completed) {
                     CircularProgressIndicator(
-                        progress = { progress },
+                        progress = { playerState.progress },
                         Modifier.align(Alignment.Center)
                     )
                 }

@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -24,35 +25,33 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import java.io.File
 
+data class PlayerState(
+    val player: Player? = null,
+    val progress: Float = 0.0f,
+    val running: Boolean = false,
+    val completed: Boolean = false,
+    val channel: String = "Channel",
+    val title: String = "Video Title"
+)
+
 class PlayerViewModel : ViewModel() {
     var dataDir: File? = null
 
-    private val _player: MutableStateFlow<Player?> = MutableStateFlow(null)
-    val player: StateFlow<Player?> = _player.asStateFlow()
-
-    private val _progress = MutableStateFlow(0.0f)
-    val progress: StateFlow<Float> = _progress.asStateFlow()
-
-    private val _running = MutableStateFlow(false)
-    val running: StateFlow<Boolean> = _running.asStateFlow()
-
-    private val _completed = MutableStateFlow(false)
-    val completed: StateFlow<Boolean> = _completed.asStateFlow()
-
-    private val _channel = MutableStateFlow("Channel")
-    val channel: StateFlow<String> = _channel.asStateFlow()
-
-    private val _title = MutableStateFlow("Video Title")
-    val title: StateFlow<String> = _title.asStateFlow()
+    private val _playerState =  MutableStateFlow(PlayerState())
+    val playerState: StateFlow<PlayerState> = _playerState.asStateFlow()
 
     fun downloadAndPlayVideo(context: Context, videoUri: Uri?) {
-        if (_player.value == null) {
-            _player.value = ExoPlayer.Builder(context).build()
+        if (_playerState.value.player == null) {
+            _playerState.update { currentState -> currentState.copy(player = ExoPlayer.Builder(context).build()) }
         }
 
-        if (!_running.value && !_completed.value) {
-            _channel.value = ""
-            _title.value = ""
+        if (!_playerState.value.running && !_playerState.value.completed) {
+            _playerState.update { currentState ->
+                currentState.copy(
+                    channel = "",
+                    title = ""
+                )
+            }
 
             dataDir = File(context.cacheDir, "video")
             dataDir?.deleteRecursively()
@@ -62,7 +61,7 @@ class PlayerViewModel : ViewModel() {
                 toast.show()
             } else {
                 viewModelScope.launch(Dispatchers.IO) {
-                    _running.value = true
+                    _playerState.update { currentState -> currentState.copy(running = true) }
 
                     try {
                         YoutubeDL.getInstance().init(context)
@@ -75,7 +74,7 @@ class PlayerViewModel : ViewModel() {
                         YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, text ->
                             println("$progress % (ETA $etaInSeconds) $text")
 
-                            _progress.value = progress.coerceIn(0.0f, 100.0f) / 100.0f
+                            _playerState.update { currentState -> currentState.copy(progress = progress.coerceIn(0.0f, 100.0f) / 100.0f) }
                         }
                     } catch (e: YoutubeDLException) {
                         withContext(Dispatchers.Main) {
@@ -89,21 +88,29 @@ class PlayerViewModel : ViewModel() {
                         val json = Json { ignoreUnknownKeys = true }
                         val jsonObject = json.parseToJsonElement(infoFile.readText()).jsonObject
 
-                        _channel.value = jsonObject["channel"]?.jsonPrimitive?.content ?: ""
-                        _title.value = jsonObject["title"]?.jsonPrimitive?.content ?: ""
+                        _playerState.update { currentState ->
+                            currentState.copy(
+                                channel = jsonObject["channel"]?.jsonPrimitive?.content ?: "",
+                                title = jsonObject["title"]?.jsonPrimitive?.content ?: ""
+                            )
+                        }
                     }
 
                     val videoFile = File(dataDir, "video.mp4")
                     if (videoFile.exists()) {
                         withContext(Dispatchers.Main) {
-                            _player.value?.setMediaItem(MediaItem.fromUri(videoFile.toUri()))
-                            _player.value?.repeatMode = Player.REPEAT_MODE_ALL
-                            _player.value?.prepare()
+                            _playerState.value.player?.setMediaItem(MediaItem.fromUri(videoFile.toUri()))
+                            _playerState.value.player?.repeatMode = Player.REPEAT_MODE_ALL
+                            _playerState.value.player?.prepare()
                         }
                     }
 
-                    _running.value = false
-                    _completed.value = true
+                    _playerState.update { currentState ->
+                        currentState.copy(
+                            running = true,
+                            completed = true
+                        )
+                    }
                 }
             }
         }
@@ -111,7 +118,7 @@ class PlayerViewModel : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        _player.value?.release()
+        _playerState.value.player?.release()
         dataDir?.deleteRecursively()
     }
 }
