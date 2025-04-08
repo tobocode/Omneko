@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Button for easy access to the link association settings page
 - Settings button on the video player activity
+- Add disabled video info and comments buttons
 
 ### Changed
 
