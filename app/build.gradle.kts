@@ -85,6 +85,7 @@ dependencies {
     implementation(libs.androidx.preference.ktx)
     implementation(libs.material)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.material.icons.extended)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

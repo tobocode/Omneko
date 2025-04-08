@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Comment
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
@@ -132,6 +133,7 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
                         InfoBox(modifier = Modifier.align(Alignment.Bottom).weight(1.0f), playerState.channel, playerState.title)
 
                         Column(modifier = Modifier.padding(10.dp)) {
+                            StackButton(modifier = Modifier, Icons.AutoMirrored.Filled.Comment, "Comments", enabled = false) { }
                             StackButton(modifier = Modifier, Icons.Filled.Info, "Info", enabled = false) { }
                             StackButton(modifier = Modifier, Icons.Filled.Settings, "Settings") {
                                 val intent = Intent(context, MainActivity::class.java)
@@ -191,7 +193,7 @@ fun StackButton(modifier: Modifier = Modifier, icon: ImageVector, iconDescriptio
         Icon(
             icon,
             contentDescription = iconDescription,
-            modifier = Modifier.size(40.dp)
+            modifier = Modifier.size(34.dp)
         )
     }
 }
