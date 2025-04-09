@@ -16,10 +16,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Comment
 import androidx.compose.material.icons.filled.Info
@@ -53,7 +58,9 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -70,6 +77,7 @@ import androidx.media3.common.Player
 import androidx.media3.ui.compose.PlayerSurface
 import dev.tobo.omneko.ui.theme.OmnekoTheme
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PlayerActivity : ComponentActivity() {
     val model: PlayerViewModel by viewModels()
@@ -256,10 +264,20 @@ fun InfoSheet(mutableShowInfoSheet: MutableState<Boolean> = mutableStateOf(true)
     } else {
         rememberModalBottomSheetState()
     }
-    //val scope = rememberCoroutineScope()
+
+    val scope = rememberCoroutineScope()
     var showInfoSheet by mutableShowInfoSheet
 
     var selectedTabIndex by mutableSelectedTabIndex
+    val pagerState = rememberPagerState(pageCount = { 2 })
+
+    LaunchedEffect(Unit) {
+        pagerState.scrollToPage(selectedTabIndex)
+
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            selectedTabIndex = page
+        }
+    }
 
     ModalBottomSheet(
         onDismissRequest = {
@@ -278,7 +296,12 @@ fun InfoSheet(mutableShowInfoSheet: MutableState<Boolean> = mutableStateOf(true)
             listOf("About", "Comments").forEachIndexed { index, tabTitle ->
                 Tab(
                     selected = selectedTabIndex == index,
-                    onClick = { selectedTabIndex = index }
+                    onClick = {
+                        selectedTabIndex = index
+                        scope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    }
                 ) {
                     Text(
                         modifier = Modifier.padding(16.dp),
@@ -288,9 +311,14 @@ fun InfoSheet(mutableShowInfoSheet: MutableState<Boolean> = mutableStateOf(true)
             }
         }
 
-        when(selectedTabIndex) {
-            0 -> VideoInfoPage(viewModel)
-            1 -> CommentPage()
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.verticalScroll(rememberScrollState())
+        ) { page ->
+            when(page) {
+                0 -> VideoInfoPage(viewModel)
+                1 -> CommentPage(viewModel)
+            }
         }
     }
 }
@@ -334,10 +362,16 @@ fun VideoInfoPage(viewModel: PlayerViewModel = viewModel()) {
 }
 
 @Composable
-fun CommentPage() {
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text("Comments")
+fun CommentPage(viewModel: PlayerViewModel = viewModel()) {
+    val playerState by viewModel.playerState.collectAsState()
+
+    Box(modifier = Modifier.fillMaxWidth()) {
+        Text("No comments available", modifier = Modifier.padding(100.dp).align(Alignment.Center))
     }
+
+//    Column(modifier = Modifier.padding(16.dp)) {
+//        Text("Comments")
+//    }
 }
 
 @Preview(name = "Dark mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
