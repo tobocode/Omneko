@@ -24,19 +24,32 @@ import androidx.compose.material.icons.automirrored.filled.Comment
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -45,6 +58,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -95,8 +109,13 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
     val context = LocalContext.current
 
     val playerState by viewModel.playerState.collectAsState()
-
     var videoProgress by remember { mutableFloatStateOf(0f) }
+
+    val mutableShowInfoSheet = remember { mutableStateOf (false) }
+    var showInfoSheet by mutableShowInfoSheet
+
+    val mutableSelectedTabIndex = remember { mutableIntStateOf(0) }
+    var selectedTabIndex by mutableSelectedTabIndex
 
     LaunchedEffect(Unit) {
         viewModel.downloadAndPlayVideo(context, videoUri)
@@ -133,8 +152,15 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
                         InfoBox(modifier = Modifier.align(Alignment.Bottom).weight(1.0f), playerState.channel, playerState.title)
 
                         Column(modifier = Modifier.padding(10.dp)) {
-                            StackButton(modifier = Modifier, Icons.AutoMirrored.Filled.Comment, "Comments", enabled = false) { }
-                            StackButton(modifier = Modifier, Icons.Filled.Info, "Info", enabled = false) { }
+                            StackButton(modifier = Modifier, Icons.AutoMirrored.Filled.Comment, "Comments", enabled = playerState.completed) {
+                                selectedTabIndex = 1
+                                showInfoSheet = true
+                            }
+                            StackButton(modifier = Modifier, Icons.Filled.Info, "Info", enabled = playerState.completed) {
+                                selectedTabIndex = 0
+                                showInfoSheet = true
+                            }
+
                             StackButton(modifier = Modifier, Icons.Filled.Settings, "Settings") {
                                 val intent = Intent(context, MainActivity::class.java)
                                 context.startActivity(intent)
@@ -153,6 +179,10 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
 
                 if (videoUri != null && !playerState.completed) {
                     LabeledProgress(modifier = Modifier.align(Alignment.Center), playerState.progress)
+                }
+
+                if (showInfoSheet) {
+                    InfoSheet(mutableShowInfoSheet, mutableSelectedTabIndex)
                 }
             }
         }
@@ -211,6 +241,68 @@ fun LabeledProgress(modifier: Modifier = Modifier, progress: Float) {
             color = Color.White,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
+    }
+}
+
+@Preview(name = "Info Sheet")
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun InfoSheet(mutableShowInfoSheet: MutableState<Boolean> = mutableStateOf(true), mutableSelectedTabIndex: MutableIntState = mutableIntStateOf(0)) {
+    val infoSheetState = if (LocalInspectionMode.current) {
+        rememberStandardBottomSheetState(initialValue = SheetValue.Expanded)
+    } else {
+        rememberModalBottomSheetState()
+    }
+    //val scope = rememberCoroutineScope()
+    var showInfoSheet by mutableShowInfoSheet
+
+    var selectedTabIndex by mutableSelectedTabIndex
+
+    ModalBottomSheet(
+        onDismissRequest = {
+            showInfoSheet = false
+        },
+        sheetState = infoSheetState
+    ) {
+        TabRow(
+            selectedTabIndex = selectedTabIndex,
+            indicator = { tabPositions ->
+                TabRowDefaults.PrimaryIndicator(
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex])
+                )
+            }
+        ) {
+            listOf("About", "Comments").forEachIndexed { index, tabTitle ->
+                Tab(
+                    selected = selectedTabIndex == index,
+                    onClick = { selectedTabIndex = index }
+                ) {
+                    Text(
+                        modifier = Modifier.padding(16.dp),
+                        text = tabTitle
+                    )
+                }
+            }
+        }
+
+        when(selectedTabIndex) {
+            0 -> VideoInfoPage()
+            1 -> CommentPage()
+        }
+    }
+}
+
+@Composable
+fun VideoInfoPage() {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text("Video info")
+    }
+}
+
+@Composable
+fun CommentPage() {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text("Comments")
     }
 }
 
