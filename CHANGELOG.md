@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Bottom sheet for video information and comments
-- Video title, description, like count and view count are now shown in the about tab of the bottom sheet
+- Video title, uploader, description, like count and view count are now shown in the about tab of the bottom sheet
 
 ## [1.0.0-alpha.5] - 2025-04-08
 
