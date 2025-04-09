@@ -150,7 +150,7 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
                 }
 
                 Column(modifier = Modifier.align(Alignment.BottomStart)) {
-                    Row() {
+                    Row {
                         InfoBox(modifier = Modifier.align(Alignment.Bottom).weight(1.0f), playerState.channel, playerState.title)
 
                         Column(modifier = Modifier.padding(10.dp)) {
@@ -301,10 +301,33 @@ fun VideoInfoPage(viewModel: PlayerViewModel = viewModel()) {
 
     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(playerState.title, fontWeight = FontWeight.Bold)
+        Text("Uploader: @${playerState.uploader}")
+
+        // This creates a link that should open the uploaders channel in the browser,
+        // but if the app is configured to handle the sites links, it may start downloading all
+        // videos from that channel.
+        // TODO: Force the link to open in the browser or add support for viewing entire channels
+//        Text(buildAnnotatedString {
+//            append("Uploader: ")
+//
+//            pushLink(LinkAnnotation.Url(
+//                playerState.uploaderUrl,
+//                TextLinkStyles(
+//                    style = SpanStyle(color = MaterialTheme.colorScheme.primary)
+//                )
+//            ))
+//
+//            append("@${playerState.uploader}")
+//            pop()
+//        })
+
         HorizontalDivider()
+
         Text("Description:")
         Text(playerState.description)
+
         HorizontalDivider()
+
         Text("View count: ${playerState.viewCount}")
         Text("Like count: ${playerState.likeCount}")
     }
