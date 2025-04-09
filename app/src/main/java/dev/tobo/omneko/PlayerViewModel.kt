@@ -31,7 +31,10 @@ data class PlayerState(
     val running: Boolean = false,
     val completed: Boolean = false,
     val channel: String = "Channel",
-    val title: String = "Video Title"
+    val title: String = "Video Title",
+    val description: String = "Video description",
+    val viewCount: Int = 0,
+    val likeCount: Int = 0
 )
 
 class PlayerViewModel : ViewModel() {
@@ -49,7 +52,8 @@ class PlayerViewModel : ViewModel() {
             _playerState.update { currentState ->
                 currentState.copy(
                     channel = "",
-                    title = ""
+                    title = "",
+                    description = ""
                 )
             }
 
@@ -91,7 +95,10 @@ class PlayerViewModel : ViewModel() {
                         _playerState.update { currentState ->
                             currentState.copy(
                                 channel = jsonObject["channel"]?.jsonPrimitive?.content ?: "",
-                                title = jsonObject["title"]?.jsonPrimitive?.content ?: ""
+                                title = jsonObject["title"]?.jsonPrimitive?.content ?: "",
+                                description = jsonObject["description"]?.jsonPrimitive?.content ?: "",
+                                viewCount = jsonObject["view_count"]?.jsonPrimitive?.content?.toInt() ?: 0,
+                                likeCount = jsonObject["like_count"]?.jsonPrimitive?.content?.toInt() ?: 0
                             )
                         }
                     }

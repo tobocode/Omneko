@@ -82,7 +82,7 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
         ) { innerPadding ->
             Column(
                 modifier = modifier.padding(innerPadding).padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text("If you have trouble watching videos, try updating YoutubeDL")
 

@@ -12,6 +12,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -156,6 +158,7 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
                                 selectedTabIndex = 1
                                 showInfoSheet = true
                             }
+
                             StackButton(modifier = Modifier, Icons.Filled.Info, "Info", enabled = playerState.completed) {
                                 selectedTabIndex = 0
                                 showInfoSheet = true
@@ -182,7 +185,7 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
                 }
 
                 if (showInfoSheet) {
-                    InfoSheet(mutableShowInfoSheet, mutableSelectedTabIndex)
+                    InfoSheet(mutableShowInfoSheet, mutableSelectedTabIndex, viewModel)
                 }
             }
         }
@@ -247,7 +250,7 @@ fun LabeledProgress(modifier: Modifier = Modifier, progress: Float) {
 @Preview(name = "Info Sheet")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InfoSheet(mutableShowInfoSheet: MutableState<Boolean> = mutableStateOf(true), mutableSelectedTabIndex: MutableIntState = mutableIntStateOf(0)) {
+fun InfoSheet(mutableShowInfoSheet: MutableState<Boolean> = mutableStateOf(true), mutableSelectedTabIndex: MutableIntState = mutableIntStateOf(0), viewModel: PlayerViewModel = viewModel()) {
     val infoSheetState = if (LocalInspectionMode.current) {
         rememberStandardBottomSheetState(initialValue = SheetValue.Expanded)
     } else {
@@ -286,16 +289,24 @@ fun InfoSheet(mutableShowInfoSheet: MutableState<Boolean> = mutableStateOf(true)
         }
 
         when(selectedTabIndex) {
-            0 -> VideoInfoPage()
+            0 -> VideoInfoPage(viewModel)
             1 -> CommentPage()
         }
     }
 }
 
 @Composable
-fun VideoInfoPage() {
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text("Video info")
+fun VideoInfoPage(viewModel: PlayerViewModel = viewModel()) {
+    val playerState by viewModel.playerState.collectAsState()
+
+    Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(playerState.title, fontWeight = FontWeight.Bold)
+        HorizontalDivider()
+        Text("Description:")
+        Text(playerState.description)
+        HorizontalDivider()
+        Text("View count: ${playerState.viewCount}")
+        Text("Like count: ${playerState.likeCount}")
     }
 }
 
