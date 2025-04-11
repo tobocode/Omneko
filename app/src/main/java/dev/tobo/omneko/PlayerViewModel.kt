@@ -24,6 +24,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import java.io.File
+import java.io.FileInputStream
 
 data class PlayerState(
     val player: Player? = null,
@@ -126,6 +127,26 @@ class PlayerViewModel : ViewModel() {
                     }
                 }
             }
+        }
+    }
+
+    fun copyVideoTo(context: Context, uri: Uri?) {
+        if (uri == null) {
+            val toast = Toast.makeText(context, "Failed to download video", Toast.LENGTH_LONG)
+            toast.show()
+        } else {
+            val videoFile = File(dataDir, "video.mp4")
+
+            context.contentResolver.openOutputStream(uri).use { outputStream ->
+                if (outputStream != null) {
+                    FileInputStream(videoFile).use { inputStream ->
+                        inputStream.copyTo(outputStream)
+                    }
+                }
+            }
+
+            val toast = Toast.makeText(context, "Video file saved", Toast.LENGTH_LONG)
+            toast.show()
         }
     }
 

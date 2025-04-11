@@ -1,22 +1,26 @@
 package dev.tobo.omneko
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.DocumentsContract
 import android.webkit.URLUtil
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,6 +31,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Comment
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
@@ -127,6 +132,12 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
     val mutableSelectedTabIndex = remember { mutableIntStateOf(0) }
     var selectedTabIndex by mutableSelectedTabIndex
 
+    val downloadFileLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            viewModel.copyVideoTo(context, result.data?.data)
+        }
+    }
+
     LaunchedEffect(Unit) {
         viewModel.downloadAndPlayVideo(context, videoUri)
 
@@ -162,17 +173,29 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
                         InfoBox(modifier = Modifier.align(Alignment.Bottom).weight(1.0f), playerState.channel, playerState.title)
 
                         Column(modifier = Modifier.padding(10.dp)) {
-                            StackButton(modifier = Modifier, Icons.AutoMirrored.Filled.Comment, "Comments", enabled = playerState.completed) {
+                            StackButton(Icons.Filled.Download, "Download", enabled = playerState.completed) {
+                                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                                    addCategory(Intent.CATEGORY_OPENABLE)
+                                    type = "video/mp4"
+
+                                    putExtra(Intent.EXTRA_TITLE, "video.mp4")
+                                    putExtra(DocumentsContract.EXTRA_INITIAL_URI, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS))
+                                }
+
+                                downloadFileLauncher.launch(intent)
+                            }
+
+                            StackButton(Icons.AutoMirrored.Filled.Comment, "Comments", enabled = playerState.completed) {
                                 selectedTabIndex = 1
                                 showInfoSheet = true
                             }
 
-                            StackButton(modifier = Modifier, Icons.Filled.Info, "Info", enabled = playerState.completed) {
+                            StackButton(Icons.Filled.Info, "Info", enabled = playerState.completed) {
                                 selectedTabIndex = 0
                                 showInfoSheet = true
                             }
 
-                            StackButton(modifier = Modifier, Icons.Filled.Settings, "Settings") {
+                            StackButton(Icons.Filled.Settings, "Settings") {
                                 val intent = Intent(context, MainActivity::class.java)
                                 context.startActivity(intent)
                             }
@@ -219,7 +242,7 @@ fun InfoBox(modifier: Modifier = Modifier, channel: String, title: String) {
 }
 
 @Composable
-fun StackButton(modifier: Modifier = Modifier, icon: ImageVector, iconDescription: String, enabled: Boolean = true, onClick: () -> Unit) {
+fun StackButton(icon: ImageVector, iconDescription: String, modifier: Modifier = Modifier, enabled: Boolean = true, onClick: () -> Unit) {
     IconButton(
         enabled = enabled,
         modifier = modifier.padding(8.dp).size(55.dp),
