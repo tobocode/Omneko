@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import java.io.File
@@ -37,8 +38,36 @@ data class PlayerState(
     val title: String = "Video Title",
     val description: String = "Video description",
     val viewCount: Int = 0,
-    val likeCount: Int = 0
+    val likeCount: Int = 0,
+    val rootComment: Comment = Comment("root", "", "")
 )
+
+data class Comment(
+    val id: String,
+    val text: String,
+    val author: String,
+    val children: List<Comment> = emptyList()
+) {
+    fun addCommentNode(parentId: String, comment: Comment): Comment? {
+        if (parentId == this.id) {
+            return this.copy(
+                children = this.children + comment
+            )
+        }
+
+        for (child in children) {
+            val updatedChild = child.addCommentNode(parentId, comment)
+
+            if (updatedChild != null) {
+                return this.copy(
+                    children = children.map { if (it.id == parentId) updatedChild else it }
+                )
+            }
+        }
+
+        return null
+    }
+}
 
 class PlayerViewModel : ViewModel() {
     var dataDir: File? = null
@@ -97,6 +126,24 @@ class PlayerViewModel : ViewModel() {
                         val json = Json { ignoreUnknownKeys = true }
                         val jsonObject = json.parseToJsonElement(infoFile.readText()).jsonObject
 
+                        val jsonCommentList = jsonObject["comments"]?.jsonArray
+
+                        var rootComment = Comment("root", "", "")
+
+                        if (jsonCommentList != null) {
+                            for (jsonComment in jsonCommentList) {
+                                val parent = jsonComment.jsonObject["parent"]?.jsonPrimitive?.content
+
+                                var comment = Comment(
+                                    jsonComment.jsonObject["id"]?.jsonPrimitive?.content ?: "",
+                                    jsonComment.jsonObject["text"]?.jsonPrimitive?.content ?: "",
+                                    jsonComment.jsonObject["author"]?.jsonPrimitive?.content ?: ""
+                                )
+
+                                rootComment = rootComment.addCommentNode(parent ?: "root", comment) ?: rootComment
+                            }
+                        }
+
                         _playerState.update { currentState ->
                             currentState.copy(
                                 channel = jsonObject["channel"]?.jsonPrimitive?.content ?: "",
@@ -105,7 +152,8 @@ class PlayerViewModel : ViewModel() {
                                 title = jsonObject["title"]?.jsonPrimitive?.content ?: "",
                                 description = jsonObject["description"]?.jsonPrimitive?.content ?: "",
                                 viewCount = jsonObject["view_count"]?.jsonPrimitive?.content?.toInt() ?: 0,
-                                likeCount = jsonObject["like_count"]?.jsonPrimitive?.content?.toInt() ?: 0
+                                likeCount = jsonObject["like_count"]?.jsonPrimitive?.content?.toInt() ?: 0,
+                                rootComment = rootComment
                             )
                         }
                     }
