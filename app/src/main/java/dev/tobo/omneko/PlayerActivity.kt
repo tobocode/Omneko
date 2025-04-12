@@ -25,6 +25,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -51,6 +53,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
@@ -281,7 +284,7 @@ fun LabeledProgress(modifier: Modifier = Modifier, progress: Float) {
 @Preview(name = "Info Sheet")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InfoSheet(mutableShowInfoSheet: MutableState<Boolean> = mutableStateOf(true), mutableSelectedTabIndex: MutableIntState = mutableIntStateOf(0), viewModel: PlayerViewModel = viewModel()) {
+fun InfoSheet(mutableShowInfoSheet: MutableState<Boolean> = mutableStateOf(true), mutableSelectedTabIndex: MutableIntState = mutableIntStateOf(1), viewModel: PlayerViewModel = viewModel()) {
     val infoSheetState = if (LocalInspectionMode.current) {
         rememberStandardBottomSheetState(initialValue = SheetValue.Expanded)
     } else {
@@ -334,10 +337,7 @@ fun InfoSheet(mutableShowInfoSheet: MutableState<Boolean> = mutableStateOf(true)
             }
         }
 
-        HorizontalPager(
-            state = pagerState,
-            modifier = Modifier.verticalScroll(rememberScrollState())
-        ) { page ->
+        HorizontalPager(state = pagerState) { page ->
             when(page) {
                 0 -> VideoInfoPage(viewModel)
                 1 -> CommentPage(viewModel)
@@ -350,7 +350,10 @@ fun InfoSheet(mutableShowInfoSheet: MutableState<Boolean> = mutableStateOf(true)
 fun VideoInfoPage(viewModel: PlayerViewModel = viewModel()) {
     val playerState by viewModel.playerState.collectAsState()
 
-    Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(
+        modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         Text(playerState.title, fontWeight = FontWeight.Bold)
         Text("Uploader: @${playerState.uploader}")
 
@@ -388,13 +391,59 @@ fun VideoInfoPage(viewModel: PlayerViewModel = viewModel()) {
 fun CommentPage(viewModel: PlayerViewModel = viewModel()) {
     val playerState by viewModel.playerState.collectAsState()
 
-    Box(modifier = Modifier.fillMaxWidth()) {
-        Text("No comments available", modifier = Modifier.padding(100.dp).align(Alignment.Center))
+    if (playerState.rootComment.children.isNotEmpty()) {
+        LazyColumn(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            items(playerState.rootComment.children) { comment ->
+                Comment(comment, viewModel)
+            }
+        }
+    } else {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Text("No comments available", modifier = Modifier.padding(100.dp).align(Alignment.Center))
+        }
     }
+}
 
-//    Column(modifier = Modifier.padding(16.dp)) {
-//        Text("Comments")
-//    }
+@Composable
+fun Comment(comment: Comment, viewModel: PlayerViewModel = viewModel()) {
+    var showReplies by remember { mutableStateOf(false) }
+
+    Column {
+        Text(comment.author,
+            modifier = Modifier.padding(bottom = 4.dp),
+            fontWeight = FontWeight.Bold)
+        Text(comment.text)
+
+        if (comment.children.isNotEmpty()) {
+            TextButton(
+                onClick = {
+                    showReplies = !showReplies
+                }
+            ) {
+                if (showReplies) {
+                    Text("Hide replies")
+                } else {
+                    Text("Show replies")
+                }
+            }
+
+            if (showReplies) {
+                Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                    for (reply in comment.children) {
+                        Column {
+                            Text(reply.author,
+                                modifier = Modifier.padding(bottom = 4.dp).padding(start = 12.dp),
+                                fontWeight = FontWeight.Bold)
+                            Text(reply.text, modifier = Modifier.padding(start = 12.dp))
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Preview(name = "Dark mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)

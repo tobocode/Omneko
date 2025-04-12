@@ -39,7 +39,16 @@ data class PlayerState(
     val description: String = "Video description",
     val viewCount: Int = 0,
     val likeCount: Int = 0,
-    val rootComment: Comment = Comment("root", "", "")
+    val rootComment: Comment = Comment("root", "", "", listOf(
+        Comment("id1", "Comment text", "CommenterName"),
+        Comment("id2", "Some more content", "AnotherCommenter", listOf(
+            Comment("id3", "Test comment reply", "CommenterName"),
+            Comment("id4", "One more reply", "AnotherCommenter")
+        )),
+        Comment("id5", "Yet another comment", "YetAnotherCommenter", listOf(
+            Comment("id6", "Another reply", "AnotherCommenter")
+        ))
+    ))
 )
 
 data class Comment(
@@ -87,7 +96,8 @@ class PlayerViewModel : ViewModel() {
                     uploader = "",
                     uploaderUrl = "",
                     title = "",
-                    description = ""
+                    description = "",
+                    rootComment = Comment("root", "", "")
                 )
             }
 
