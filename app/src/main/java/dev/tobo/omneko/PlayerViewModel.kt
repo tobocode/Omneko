@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
+import com.yausername.aria2c.Aria2c
 import com.yausername.ffmpeg.FFmpeg
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLException
@@ -116,9 +117,11 @@ class PlayerViewModel : ViewModel() {
                     try {
                         YoutubeDL.getInstance().init(context)
                         FFmpeg.getInstance().init(context)
+                        Aria2c.getInstance().init(context)
 
                         val request = YoutubeDLRequest(videoUri.toString())
                         request.addOption("-o", dataDir?.path + "/video.%(ext)s")
+                        request.addOption("--downloader", "libaria2c.so")
                         request.addOption("-S", "ext:mp4")
                         request.addOption("--write-info-json")
                         YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, text ->
@@ -181,9 +184,11 @@ class PlayerViewModel : ViewModel() {
                 try {
                     YoutubeDL.getInstance().init(context)
                     FFmpeg.getInstance().init(context)
+                    Aria2c.getInstance().init(context)
 
                     val request = YoutubeDLRequest(videoUri.toString())
                     request.addOption("-o", dataDir?.path + "/video_comments.%(ext)s")
+                    request.addOption("--downloader", "libaria2c.so")
                     request.addOption("--write-comments")
                     request.addOption("--skip-download")
                     YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, text ->
