@@ -169,9 +169,9 @@ class PlayerViewModel : ViewModel() {
                             completed = true
                         )
                     }
-                }
 
-                downloadComments(context, videoUri)
+                    downloadComments(context, videoUri)
+                }
             }
         }
     }
