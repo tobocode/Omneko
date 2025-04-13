@@ -391,18 +391,24 @@ fun VideoInfoPage(viewModel: PlayerViewModel = viewModel()) {
 fun CommentPage(viewModel: PlayerViewModel = viewModel()) {
     val playerState by viewModel.playerState.collectAsState()
 
-    if (playerState.rootComment.children.isNotEmpty()) {
-        LazyColumn(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            items(playerState.rootComment.children) { comment ->
-                Comment(comment, viewModel)
-            }
+    if (!playerState.commentsCompleted && playerState.commentsRunning) {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center).padding(100.dp))
         }
     } else {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            Text("No comments available", modifier = Modifier.padding(100.dp).align(Alignment.Center))
+        if (playerState.rootComment.children.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
+                items(playerState.rootComment.children) { comment ->
+                    Comment(comment, viewModel)
+                }
+            }
+        } else {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Text("No comments available", modifier = Modifier.padding(100.dp).align(Alignment.Center))
+            }
         }
     }
 }

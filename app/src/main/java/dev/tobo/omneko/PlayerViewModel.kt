@@ -31,7 +31,9 @@ data class PlayerState(
     val player: Player? = null,
     val progress: Float = 0.0f,
     val running: Boolean = false,
+    val commentsRunning: Boolean = false,
     val completed: Boolean = false,
+    val commentsCompleted: Boolean = false,
     val channel: String = "Channel",
     val uploader: String = "Uploader",
     val uploaderUrl: String = "",
@@ -118,7 +120,7 @@ class PlayerViewModel : ViewModel() {
                         val request = YoutubeDLRequest(videoUri.toString())
                         request.addOption("-o", dataDir?.path + "/video.%(ext)s")
                         request.addOption("-S", "ext:mp4")
-                        request.addOption("--write-comments")
+                        request.addOption("--write-info-json")
                         YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, text ->
                             println("$progress % (ETA $etaInSeconds) $text")
 
@@ -136,24 +138,6 @@ class PlayerViewModel : ViewModel() {
                         val json = Json { ignoreUnknownKeys = true }
                         val jsonObject = json.parseToJsonElement(infoFile.readText()).jsonObject
 
-                        val jsonCommentList = jsonObject["comments"]?.jsonArray
-
-                        var rootComment = Comment("root", "", "")
-
-                        if (jsonCommentList != null) {
-                            for (jsonComment in jsonCommentList) {
-                                val parent = jsonComment.jsonObject["parent"]?.jsonPrimitive?.content
-
-                                var comment = Comment(
-                                    jsonComment.jsonObject["id"]?.jsonPrimitive?.content ?: "",
-                                    jsonComment.jsonObject["text"]?.jsonPrimitive?.content ?: "",
-                                    jsonComment.jsonObject["author"]?.jsonPrimitive?.content ?: ""
-                                )
-
-                                rootComment = rootComment.addCommentNode(parent ?: "root", comment) ?: rootComment
-                            }
-                        }
-
                         _playerState.update { currentState ->
                             currentState.copy(
                                 channel = jsonObject["channel"]?.jsonPrimitive?.content ?: "",
@@ -162,8 +146,7 @@ class PlayerViewModel : ViewModel() {
                                 title = jsonObject["title"]?.jsonPrimitive?.content ?: "",
                                 description = jsonObject["description"]?.jsonPrimitive?.content ?: "",
                                 viewCount = jsonObject["view_count"]?.jsonPrimitive?.content?.toInt() ?: 0,
-                                likeCount = jsonObject["like_count"]?.jsonPrimitive?.content?.toInt() ?: 0,
-                                rootComment = rootComment
+                                likeCount = jsonObject["like_count"]?.jsonPrimitive?.content?.toInt() ?: 0
                             )
                         }
                     }
@@ -179,10 +162,71 @@ class PlayerViewModel : ViewModel() {
 
                     _playerState.update { currentState ->
                         currentState.copy(
-                            running = true,
+                            running = false,
                             completed = true
                         )
                     }
+                }
+
+                downloadComments(context, videoUri)
+            }
+        }
+    }
+
+    fun downloadComments(context: Context, videoUri: Uri?) {
+        if (videoUri != null && !_playerState.value.commentsRunning && !_playerState.value.commentsCompleted) {
+            viewModelScope.launch(Dispatchers.IO) {
+                _playerState.update { currentState -> currentState.copy(commentsRunning = true) }
+
+                try {
+                    YoutubeDL.getInstance().init(context)
+                    FFmpeg.getInstance().init(context)
+
+                    val request = YoutubeDLRequest(videoUri.toString())
+                    request.addOption("-o", dataDir?.path + "/video_comments.%(ext)s")
+                    request.addOption("--write-comments")
+                    request.addOption("--skip-download")
+                    YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, text ->
+                        println("$progress % (ETA $etaInSeconds) $text")
+                    }
+                } catch (e: YoutubeDLException) {
+                    withContext(Dispatchers.Main) {
+                        val toast = Toast.makeText(context, "Unsupported URL, the video doesn't exist or YoutubeDL is out of date", Toast.LENGTH_LONG)
+                        toast.show()
+                    }
+                }
+
+                val infoFile = File(dataDir, "video_comments.info.json")
+                if (infoFile.exists()) {
+                    val json = Json { ignoreUnknownKeys = true }
+                    val jsonObject = json.parseToJsonElement(infoFile.readText()).jsonObject
+
+                    val jsonCommentList = jsonObject["comments"]?.jsonArray
+
+                    var rootComment = Comment("root", "", "")
+
+                    if (jsonCommentList != null) {
+                        for (jsonComment in jsonCommentList) {
+                            val parent = jsonComment.jsonObject["parent"]?.jsonPrimitive?.content
+
+                            var comment = Comment(
+                                jsonComment.jsonObject["id"]?.jsonPrimitive?.content ?: "",
+                                jsonComment.jsonObject["text"]?.jsonPrimitive?.content ?: "",
+                                jsonComment.jsonObject["author"]?.jsonPrimitive?.content ?: ""
+                            )
+
+                            rootComment = rootComment.addCommentNode(parent ?: "root", comment) ?: rootComment
+                        }
+                    }
+
+                    _playerState.update { currentState -> currentState.copy(rootComment = rootComment) }
+                }
+
+                _playerState.update { currentState ->
+                    currentState.copy(
+                        commentsRunning = false,
+                        commentsCompleted = true
+                    )
                 }
             }
         }
