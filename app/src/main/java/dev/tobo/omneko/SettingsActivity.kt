@@ -21,10 +21,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.tobo.omneko.ui.theme.OmnekoTheme
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
+import me.zhanghai.compose.preference.listPreference
 
 class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +35,15 @@ class SettingsActivity : ComponentActivity() {
         setContent {
             SettingsLayout()
         }
+    }
+}
+
+fun themeSettingString(setting: String): String {
+    return when (setting) {
+        "system" -> "Follow System"
+        "dark" -> "Dark mode"
+        "light" -> "Light mode"
+        else -> "null"
     }
 }
 
@@ -68,7 +79,16 @@ fun SettingsLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = vie
             println(innerPadding)
 
             ProvidePreferenceLocals {
-                LazyColumn(modifier = Modifier.padding(innerPadding).fillMaxSize()) { }
+                LazyColumn(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
+                    listPreference(
+                        key = "theme",
+                        defaultValue = "system",
+                        values = listOf("system", "dark", "light"),
+                        title = { Text("Theme") },
+                        summary = { Text(themeSettingString(it)) },
+                        valueToText = { AnnotatedString(themeSettingString(it)) }
+                    )
+                }
             }
         }
     }

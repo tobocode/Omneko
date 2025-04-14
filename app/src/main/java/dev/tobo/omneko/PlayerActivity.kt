@@ -155,7 +155,7 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
         }
     }
 
-    OmnekoTheme {
+    OmnekoTheme(forceLightStatusBar = true) {
         Scaffold(modifier = Modifier.fillMaxSize(), containerColor = Color.Black) { innerPadding ->
             Box(Modifier.padding(innerPadding)) {
                 if (playerState.player == null) {

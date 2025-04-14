@@ -21,6 +21,7 @@ material = "1.13.0-alpha12"
 coreSplashscreen = "1.2.0-beta01"
 materialIconsExtended = "1.7.8"
 composePreference = "1.1.1"
+flowPreferences = "1.9.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -50,6 +51,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIconsExtended" }
 compose-preference = { group = "me.zhanghai.compose.preference", name = "library", version.ref = "composePreference" }
+flow-preferences = { group = "com.fredporciuncula", name = "flow-preferences", version.ref = "flowPreferences" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
