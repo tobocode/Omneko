@@ -9,8 +9,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.DocumentsContract
+import android.view.WindowManager
 import android.webkit.URLUtil
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -57,6 +59,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
@@ -129,6 +132,7 @@ class PlayerActivity : ComponentActivity() {
 @Composable
 fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
     val context = LocalContext.current
+    val activity = LocalActivity.current
 
     val playerState by viewModel.playerState.collectAsState()
     var videoProgress by remember { mutableFloatStateOf(0f) }
@@ -156,6 +160,14 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
                     videoProgress = playerState.player!!.contentPosition.toFloat() / playerState.player!!.duration.toFloat()
                 }
             }
+        }
+    }
+
+    DisposableEffect(Unit) {
+        activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+        onDispose {
+            activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
     }
 

@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - German translation
 - App language can now be changed in the system settings
 
+### Changed
+
+- The screen will now stay on while the video player is open
+
 ## [1.0.0-alpha.10] - 2025-04-15
 
 ### Added
