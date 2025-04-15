@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="first_run_update_youtubedl_toast">Erster start, YoutubeDL wird aktualisiert</string>
+    <string name="update_youtubedl_prompt">Solltest du beim anschauen von Videos probleme haben, versuche YoutubeDL zu aktualisieren</string>
+    <string name="update_youtubedl_button">YoutubeDL aktualisieren</string>
+    <string name="link_association_prompt">Hier kannst du einstellen, welche links automatisch geöffnet werden sollen</string>
+    <string name="link_association_button">Linkassoziationen bearbeiten</string>
+    <string name="updating_youtubedl_toast">YoutubeDL wird aktualisiert</string>
+    <string name="youtubedl_update_complete_toast">Update abgeschlossen</string>
+    <string name="youtubedl_update_failed_toast">Update fehlgeschlagen</string>
+    <string name="title_activity_settings">Einstellungen</string>
+    <string name="theme_follow_system">Systemeinstellung folgen</string>
+    <string name="theme_dark_mode">Dunkler Modus</string>
+    <string name="theme_light_mode">Heller Modus</string>
+    <string name="comment_download_unlimited">Alle (Das Herunterladen dauert möglicherweise lange)</string>
+    <string name="download_quality_best">Hoch</string>
+    <string name="download_quality_worst">Niedrig</string>
+    <string name="download_quality_custom">Benutzerdefiniert</string>
+    <string name="preference_category_general">Allgemein</string>
+    <string name="preference_category_download">Herunterladen</string>
+    <string name="preference_theme_title">Aussehen</string>
+    <string name="preference_max_comments_title">Maximale anzahl an herunterzuladenen Kommentaren</string>
+    <string name="preference_use_aria2c_title">Nutze zum Herunterladen Aria2c</string>
+    <string name="preference_use_aria2c_summary">Probiere beides aus, um zu sehen, welche Einstellung dir die geringsten Ladezeiten bietet</string>
+    <string name="preference_download_quality_title">Downloadqualität</string>
+    <string name="preference_custom_download_quality_title">Benutzerdefinierte Downloadqualität</string>
+    <string name="preference_footer_custom_download_quality">Das Feld für die benutzerdefinierte Downloadqualität erwartet eine für yt-dlp über den \"-S\" parameter lesbare Zeichenkette, welchem automatisch \"ext:mp4\" vorangestellt wird. Ungültige Eingaben können zum Fehlschlagen von Downloads führen. Solltest du dir unsicher sein, nutze eines der vorgegebenen Qualitätsprofile.</string>
+    <string name="downloading_video_indicator">Video wird heruntergeladen</string>
+    <string name="video_info_tab">Info</string>
+    <string name="comments_tab">Kommentare</string>
+    <string name="video_info_uploader">Hochgeladen von: @%1$s</string>
+    <string name="video_info_description">Beschreibung:</string>
+    <string name="video_info_view_count">Anzahl der Views: %1$d</string>
+    <string name="video_info_like_count">Anzahl der Likes: %1$d</string>
+    <string name="no_comments_indicator">Keine Kommentare verfügbar</string>
+    <string name="comments_show_replies">Antworten anzeigen</string>
+    <string name="comments_hide_replies">Antworten ausblenden</string>
+    <string name="downloader_error_invalid_url_toast">Ungültige URL</string>
+    <string name="downloader_error_generic_toast">Nicht unterstützte URL, das Video existiert nicht oder YoutubeDL ist nicht aktuell</string>
+    <string name="downloader_download_failed_toast">Fehler beim herunterladen des Videos</string>
+    <string name="downloader_download_success_toast">Videodatei gespeichert</string>
+</resources>
