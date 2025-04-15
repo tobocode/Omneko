@@ -27,6 +27,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.tobo.omneko.ui.theme.OmnekoTheme
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
+import me.zhanghai.compose.preference.preferenceCategory
 import me.zhanghai.compose.preference.switchPreference
 
 class SettingsActivity : ComponentActivity() {
@@ -89,6 +90,11 @@ fun SettingsLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = vie
 
             ProvidePreferenceLocals {
                 LazyColumn(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
+                    preferenceCategory(
+                        key = "category_general",
+                        title = { Text("General") }
+                    )
+
                     listPreference(
                         key = "theme",
                         defaultValue = PREFERENCE_DEFAULT_THEME,
@@ -96,6 +102,11 @@ fun SettingsLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = vie
                         title = { Text("Theme") },
                         summary = { Text(themeSettingString(it)) },
                         valueToText = { AnnotatedString(themeSettingString(it)) }
+                    )
+
+                    preferenceCategory(
+                        key = "category_download",
+                        title = { Text("Download") }
                     )
 
                     listPreference(
