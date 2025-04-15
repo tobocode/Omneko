@@ -45,8 +45,8 @@
 
     <string name="video_info_uploader">Uploader: @%1$s</string>
     <string name="video_info_description">Description:</string>
-    <string name="video_info_view_count">View count: %1$d</string>
-    <string name="video_info_like_count">Like count: %1$d</string>
+    <string name="video_info_view_count">View count: %1$s</string>
+    <string name="video_info_like_count">Like count: %1$s</string>
 
     <string name="no_comments_indicator">No comments available</string>
     <string name="comments_show_replies">Show replies</string>

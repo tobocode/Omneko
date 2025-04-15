@@ -93,6 +93,7 @@ import dev.tobo.omneko.viewmodel.Comment
 import dev.tobo.omneko.viewmodel.PlayerViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
 
 class PlayerActivity : ComponentActivity() {
     val model: PlayerViewModel by viewModels()
@@ -398,8 +399,9 @@ fun VideoInfoPage(viewModel: PlayerViewModel = viewModel()) {
 
         HorizontalDivider()
 
-        Text(stringResource(R.string.video_info_view_count, playerState.viewCount))
-        Text(stringResource(R.string.video_info_like_count, playerState.likeCount))
+        val numberFormatter = NumberFormat.getInstance()
+        Text(stringResource(R.string.video_info_view_count, numberFormatter.format(playerState.viewCount)))
+        Text(stringResource(R.string.video_info_like_count, numberFormatter.format(playerState.likeCount)))
     }
 }
 

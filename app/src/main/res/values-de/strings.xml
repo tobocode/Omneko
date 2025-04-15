@@ -30,8 +30,8 @@
     <string name="comments_tab">Kommentare</string>
     <string name="video_info_uploader">Hochgeladen von: @%1$s</string>
     <string name="video_info_description">Beschreibung:</string>
-    <string name="video_info_view_count">Anzahl der Views: %1$d</string>
-    <string name="video_info_like_count">Anzahl der Likes: %1$d</string>
+    <string name="video_info_view_count">Anzahl der Views: %1$s</string>
+    <string name="video_info_like_count">Anzahl der Likes: %1$s</string>
     <string name="no_comments_indicator">Keine Kommentare verfügbar</string>
     <string name="comments_show_replies">Antworten anzeigen</string>
     <string name="comments_hide_replies">Antworten ausblenden</string>
