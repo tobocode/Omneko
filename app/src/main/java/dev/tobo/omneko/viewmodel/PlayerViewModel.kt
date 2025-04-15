@@ -16,8 +16,17 @@ import com.yausername.ffmpeg.FFmpeg
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLException
 import com.yausername.youtubedl_android.YoutubeDLRequest
+import dev.tobo.omneko.PREFERENCE_DEFAULT_CUSTOM_DOWNLOAD_QUALITY
+import dev.tobo.omneko.PREFERENCE_DEFAULT_DOWNLOAD_QUALITY
 import dev.tobo.omneko.PREFERENCE_DEFAULT_MAX_COMMENTS
 import dev.tobo.omneko.PREFERENCE_DEFAULT_USE_ARIA2C
+import dev.tobo.omneko.PREFERENCE_DOWNLOAD_QUALITY_BEST
+import dev.tobo.omneko.PREFERENCE_DOWNLOAD_QUALITY_BEST_FORMAT
+import dev.tobo.omneko.PREFERENCE_DOWNLOAD_QUALITY_CUSTOM
+import dev.tobo.omneko.PREFERENCE_DOWNLOAD_QUALITY_WORST
+import dev.tobo.omneko.PREFERENCE_DOWNLOAD_QUALITY_WORST_FORMAT
+import dev.tobo.omneko.PREFERENCE_KEY_CUSTOM_DOWNLOAD_QUALITY
+import dev.tobo.omneko.PREFERENCE_KEY_DOWNLOAD_QUALITY
 import dev.tobo.omneko.PREFERENCE_KEY_MAX_COMMENTS
 import dev.tobo.omneko.PREFERENCE_KEY_USE_ARIA2C
 import kotlinx.coroutines.Dispatchers
@@ -138,7 +147,22 @@ class PlayerViewModel : ViewModel() {
                             request.addOption("--downloader", "libaria2c.so")
                         }
 
-                        request.addOption("-S", "ext:mp4")
+                        val qualitySort = when(flowPreferences.getString(
+                            PREFERENCE_KEY_DOWNLOAD_QUALITY,
+                            PREFERENCE_DEFAULT_DOWNLOAD_QUALITY
+                        ).get()) {
+                            PREFERENCE_DOWNLOAD_QUALITY_BEST -> PREFERENCE_DOWNLOAD_QUALITY_BEST_FORMAT
+                            PREFERENCE_DOWNLOAD_QUALITY_WORST -> PREFERENCE_DOWNLOAD_QUALITY_WORST_FORMAT
+                            PREFERENCE_DOWNLOAD_QUALITY_CUSTOM -> flowPreferences.getString(
+                                PREFERENCE_KEY_CUSTOM_DOWNLOAD_QUALITY,
+                                PREFERENCE_DEFAULT_CUSTOM_DOWNLOAD_QUALITY
+                            ).get()
+                            else -> ""
+                        }
+
+                        println("QUALITY SORT: $qualitySort")
+
+                        request.addOption("-S", "ext:mp4,$qualitySort")
                         request.addOption("--write-info-json")
                         YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, text ->
                             println("$progress % (ETA $etaInSeconds) $text")

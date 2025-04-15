@@ -58,7 +58,10 @@ fun OmnekoTheme(
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(LocalContext.current)
     val flowPreferences = FlowSharedPreferences(preferences)
-    val themePreference by flowPreferences.getString(PREFERENCE_KEY_THEME, PREFERENCE_DEFAULT_THEME).asFlow().collectAsState(PREFERENCE_DEFAULT_THEME)
+    val themePreference by flowPreferences.getString(
+        PREFERENCE_KEY_THEME,
+        PREFERENCE_DEFAULT_THEME
+    ).asFlow().collectAsState(PREFERENCE_DEFAULT_THEME)
 
     val darkTheme = when (themePreference) {
         PREFERENCE_THEME_SYSTEM -> isSystemInDarkTheme()

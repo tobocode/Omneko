@@ -1,5 +1,12 @@
 package dev.tobo.omneko
 
+// Preference categories
+const val PREFERENCE_CATEGORY_GENERAL = "category_general"
+const val PREFERENCE_CATEGORY_DOWNLOAD = "category_download"
+
+// Preference footers
+const val PREFERENCE_FOOTER_CUSTOM_DOWNLOAD_QUALITY = "footer_custom_download_quality"
+
 // Theme preference
 const val PREFERENCE_THEME_SYSTEM = "system"
 const val PREFERENCE_THEME_DARK = "dark"
@@ -21,3 +28,23 @@ const val PREFERENCE_DEFAULT_MAX_COMMENTS = 100
 // Aria2c preference
 const val PREFERENCE_KEY_USE_ARIA2C = "use_aria2c"
 const val PREFERENCE_DEFAULT_USE_ARIA2C = false
+
+// Download quality preference
+const val PREFERENCE_DOWNLOAD_QUALITY_BEST = "best"
+const val PREFERENCE_DOWNLOAD_QUALITY_WORST = "worst"
+const val PREFERENCE_DOWNLOAD_QUALITY_CUSTOM = "custom"
+val PREFERENCE_VALUES_DOWNLOAD_QUALITY = listOf(
+    PREFERENCE_DOWNLOAD_QUALITY_BEST,
+    PREFERENCE_DOWNLOAD_QUALITY_WORST,
+    PREFERENCE_DOWNLOAD_QUALITY_CUSTOM
+)
+
+const val PREFERENCE_KEY_DOWNLOAD_QUALITY = "download_quality"
+const val PREFERENCE_DEFAULT_DOWNLOAD_QUALITY = PREFERENCE_DOWNLOAD_QUALITY_BEST
+
+const val PREFERENCE_DOWNLOAD_QUALITY_BEST_FORMAT = ""
+const val PREFERENCE_DOWNLOAD_QUALITY_WORST_FORMAT = "+size,+br,+res,+fps"
+
+// Custom download quality preference
+const val PREFERENCE_KEY_CUSTOM_DOWNLOAD_QUALITY = "custom_download_quality"
+const val PREFERENCE_DEFAULT_CUSTOM_DOWNLOAD_QUALITY = ""
