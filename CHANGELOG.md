@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - The screen will now stay on while the video player is open
+- The like and view count number formats are now localized
 
 ## [1.0.0-alpha.10] - 2025-04-15
 
