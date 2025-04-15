@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Settings screen
 - Theme setting to override the system dark/light mode
+- Setting for limiting the amount of downloaded comments
 
 ## [1.0.0-alpha.9] - 2025-04-13
 
