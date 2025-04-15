@@ -4,10 +4,13 @@
     <!-- MainActivity -->
     <string name="first_run_update_youtubedl_toast">First run, updating YoutubeDL</string>
     <string name="update_youtubedl_button">Update YoutubeDL</string>
-    <string name="update_youtubedl_summary">If you have trouble watching videos, try updating YoutubeDL</string>
+    <string name="update_youtubedl_button_summary">If you have trouble watching videos, try updating YoutubeDL</string>
 
     <string name="link_association_button">Configure link handling</string>
-    <string name="link_association_summary">Here you can configure what links should automatically be opened</string>
+    <string name="link_association_button_summary">Here you can configure what links should automatically be opened</string>
+
+    <string name="language_button">Language</string>
+    <string name="language_button_summary">This will redirect you to the system settings to change the apps language</string>
 
     <string name="theme_follow_system">Follow System</string>
     <string name="theme_dark_mode">Dark mode</string>

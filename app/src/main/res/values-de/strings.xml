@@ -2,9 +2,11 @@
 <resources>
     <string name="first_run_update_youtubedl_toast">Erster start, YoutubeDL wird aktualisiert</string>
     <string name="update_youtubedl_button">YoutubeDL aktualisieren</string>
-    <string name="update_youtubedl_summary">Solltest du beim anschauen von Videos probleme haben, versuche YoutubeDL zu aktualisieren</string>
+    <string name="update_youtubedl_button_summary">Solltest du beim anschauen von Videos probleme haben, versuche YoutubeDL zu aktualisieren</string>
     <string name="link_association_button">Linkassoziationen bearbeiten</string>
-    <string name="link_association_summary">Hier kannst du einstellen, welche links automatisch geöffnet werden sollen</string>
+    <string name="link_association_button_summary">Hier kannst du einstellen, welche links automatisch geöffnet werden sollen</string>
+    <string name="language_button">Sprache</string>
+    <string name="language_button_summary">Du wirst in die Systemeinstellungen weitergeleitet um die Sprache der App zu ändern</string>
     <string name="theme_follow_system">Systemeinstellung folgen</string>
     <string name="theme_dark_mode">Dunkler Modus</string>
     <string name="theme_light_mode">Heller Modus</string>

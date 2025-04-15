@@ -47,6 +47,7 @@ import dev.tobo.omneko.PREFERENCE_FOOTER_CUSTOM_DOWNLOAD_QUALITY
 import dev.tobo.omneko.PREFERENCE_KEY_CUSTOM_DOWNLOAD_QUALITY
 import dev.tobo.omneko.PREFERENCE_KEY_DOWNLOAD_QUALITY
 import dev.tobo.omneko.PREFERENCE_KEY_FIRST_RUN
+import dev.tobo.omneko.PREFERENCE_KEY_LANGUAGE
 import dev.tobo.omneko.PREFERENCE_KEY_LINK_ASSOCIATION
 import dev.tobo.omneko.PREFERENCE_KEY_MAX_COMMENTS
 import dev.tobo.omneko.PREFERENCE_KEY_THEME
@@ -158,7 +159,7 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                     preference(
                         key = PREFERENCE_KEY_UPDATE_YOUTUBEDL,
                         title = { Text(stringResource(R.string.update_youtubedl_button)) },
-                        summary = { Text(stringResource(R.string.update_youtubedl_summary)) },
+                        summary = { Text(stringResource(R.string.update_youtubedl_button_summary)) },
                         enabled = !updating
                     ) {
                         viewModel.updateYoutubeDL(context)
@@ -168,9 +169,21 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                         preference(
                             key = PREFERENCE_KEY_LINK_ASSOCIATION,
                             title = { Text(stringResource(R.string.link_association_button)) },
-                            summary = { Text(stringResource(R.string.link_association_summary)) }
+                            summary = { Text(stringResource(R.string.link_association_button_summary)) }
                         ) {
                             val intent = Intent(Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS)
+                            intent.data = "package:${context.packageName}".toUri()
+                            context.startActivity(intent)
+                        }
+                    }
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        preference(
+                            key = PREFERENCE_KEY_LANGUAGE,
+                            title = { Text(stringResource(R.string.language_button)) },
+                            summary = { Text(stringResource(R.string.language_button_summary)) }
+                        ) {
+                            val intent = Intent(Settings.ACTION_APP_LOCALE_SETTINGS)
                             intent.data = "package:${context.packageName}".toUri()
                             context.startActivity(intent)
                         }
