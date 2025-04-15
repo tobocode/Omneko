@@ -17,7 +17,7 @@
         android:theme="@style/Theme.Omneko"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Omneko">
             <intent-filter>
@@ -27,12 +27,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activity.SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings"
             android:theme="@style/Theme.Omneko" />
         <activity
-            android:name=".PlayerActivity"
+            android:name=".activity.PlayerActivity"
             android:exported="true"
             android:theme="@style/Theme.Omneko">
 

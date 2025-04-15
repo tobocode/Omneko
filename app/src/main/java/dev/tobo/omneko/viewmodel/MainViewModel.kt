@@ -1,4 +1,4 @@
-package dev.tobo.omneko
+package dev.tobo.omneko.viewmodel
 
 import android.content.Context
 import android.widget.Toast

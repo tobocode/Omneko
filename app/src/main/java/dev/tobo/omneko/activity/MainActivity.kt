@@ -1,4 +1,4 @@
-package dev.tobo.omneko
+package dev.tobo.omneko.activity
 
 import android.content.Intent
 import android.os.Build
@@ -36,6 +36,8 @@ import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.preference.PreferenceManager
+import dev.tobo.omneko.viewmodel.MainViewModel
+import dev.tobo.omneko.R
 import dev.tobo.omneko.ui.theme.OmnekoTheme
 
 class MainActivity : ComponentActivity() {

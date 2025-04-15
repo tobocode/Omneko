@@ -1,4 +1,4 @@
-package dev.tobo.omneko
+package dev.tobo.omneko.viewmodel
 
 import android.content.Context
 import android.net.Uri
@@ -16,6 +16,8 @@ import com.yausername.ffmpeg.FFmpeg
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLException
 import com.yausername.youtubedl_android.YoutubeDLRequest
+import dev.tobo.omneko.PREFERENCE_DEFAULT_MAX_COMMENTS
+import dev.tobo.omneko.PREFERENCE_DEFAULT_USE_ARIA2C
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

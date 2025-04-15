@@ -1,4 +1,4 @@
-package dev.tobo.omneko
+package dev.tobo.omneko.activity
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -83,6 +83,8 @@ import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.Player
 import androidx.media3.ui.compose.PlayerSurface
+import dev.tobo.omneko.viewmodel.Comment
+import dev.tobo.omneko.viewmodel.PlayerViewModel
 import dev.tobo.omneko.ui.theme.OmnekoTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

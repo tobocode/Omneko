@@ -1,4 +1,4 @@
-package dev.tobo.omneko
+package dev.tobo.omneko.activity
 
 import android.app.Activity
 import android.os.Bundle
@@ -23,7 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.tobo.omneko.PREFERENCE_DEFAULT_MAX_COMMENTS
+import dev.tobo.omneko.PREFERENCE_DEFAULT_THEME
+import dev.tobo.omneko.PREFERENCE_DEFAULT_USE_ARIA2C
+import dev.tobo.omneko.R
 import dev.tobo.omneko.ui.theme.OmnekoTheme
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
@@ -59,7 +62,7 @@ fun commentsLimitString(setting: Int): String {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewModel()) {
+fun SettingsLayout(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val activity = context as? Activity
 
