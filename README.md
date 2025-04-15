@@ -52,3 +52,10 @@ This will play the video in the same way as clicking on the link would.
 
 The first time the app is started, it will automatically update YoutubeDL to the latest stable version.
 If you encounter problems watching videos from platforms that previously worked, you can manually update YoutubeDL again in the main screen.
+
+## Donate
+
+If you like this project, please consider donating a little to one of these addresses :)
+
+Monero: 84pqAhMwbXWV7jjnA7zpNULYtWrYdJjoCPgrzXbW7AbtDDF6FWY2zJbK3nfA28PRUrfEHPV84VaCg4TW3E3VkXsL5w4dJNm
+Solana: 4TUA4GP6sp682HLbmcgL6oY9SyxBcaKXj9NCwqVDSAUp
