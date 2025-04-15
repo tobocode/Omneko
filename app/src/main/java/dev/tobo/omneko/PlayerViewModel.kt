@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.preference.PreferenceManager
+import com.fredporciuncula.flow.preferences.FlowSharedPreferences
 import com.yausername.aria2c.Aria2c
 import com.yausername.ffmpeg.FFmpeg
 import com.yausername.youtubedl_android.YoutubeDL
@@ -178,6 +180,12 @@ class PlayerViewModel : ViewModel() {
 
     fun downloadComments(context: Context, videoUri: Uri?) {
         if (videoUri != null && !_playerState.value.commentsRunning && !_playerState.value.commentsCompleted) {
+            val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+            val flowPreferences = FlowSharedPreferences(preferences)
+
+            val maxComments = flowPreferences.getInt("max_comments", 100).get()
+            val maxCommentsArg = "max_comments=${if (maxComments == 0) "all" else maxComments},all,all,all"
+
             viewModelScope.launch(Dispatchers.IO) {
                 _playerState.update { currentState -> currentState.copy(commentsRunning = true) }
 
@@ -191,6 +199,11 @@ class PlayerViewModel : ViewModel() {
                     request.addOption("--downloader", "libaria2c.so")
                     request.addOption("--write-comments")
                     request.addOption("--skip-download")
+
+                    for (extractor in listOf("tiktok", "youtube", "instagram")) {
+                        request.addOption("--extractor-args", "$extractor:$maxCommentsArg")
+                    }
+
                     YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, text ->
                         println("$progress % (ETA $etaInSeconds) $text")
                     }

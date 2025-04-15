@@ -47,6 +47,14 @@ fun themeSettingString(setting: String): String {
     }
 }
 
+fun commentsLimitString(setting: Int): String {
+    if (setting == 0) {
+        return "All (Downloading may take a long time)"
+    }
+
+    return setting.toString()
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewModel()) {
@@ -87,6 +95,15 @@ fun SettingsLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = vie
                         title = { Text("Theme") },
                         summary = { Text(themeSettingString(it)) },
                         valueToText = { AnnotatedString(themeSettingString(it)) }
+                    )
+
+                    listPreference(
+                        key = "max_comments",
+                        defaultValue = 100,
+                        values = listOf(0, 10, 50, 100, 1000),
+                        title = { Text("Maximum number of comments to download") },
+                        summary = { Text(commentsLimitString(it)) },
+                        valueToText = { AnnotatedString(commentsLimitString(it)) }
                     )
                 }
             }
