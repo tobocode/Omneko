@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Button for changing the app language
+
 ### Changed
 
 - The settings are now part of the main screen
