@@ -29,6 +29,7 @@ import dev.tobo.omneko.PREFERENCE_KEY_CUSTOM_DOWNLOAD_QUALITY
 import dev.tobo.omneko.PREFERENCE_KEY_DOWNLOAD_QUALITY
 import dev.tobo.omneko.PREFERENCE_KEY_MAX_COMMENTS
 import dev.tobo.omneko.PREFERENCE_KEY_USE_ARIA2C
+import dev.tobo.omneko.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -126,7 +127,7 @@ class PlayerViewModel : ViewModel() {
             dataDir?.deleteRecursively()
 
             if (videoUri == null || dataDir == null) {
-                val toast = Toast.makeText(context, "Invalid URL", Toast.LENGTH_SHORT)
+                val toast = Toast.makeText(context, context.getString(R.string.downloader_error_invalid_url_toast), Toast.LENGTH_SHORT)
                 toast.show()
             } else {
                 viewModelScope.launch(Dispatchers.IO) {
@@ -160,8 +161,6 @@ class PlayerViewModel : ViewModel() {
                             else -> ""
                         }
 
-                        println("QUALITY SORT: $qualitySort")
-
                         request.addOption("-S", "ext:mp4,$qualitySort")
                         request.addOption("--write-info-json")
                         YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, text ->
@@ -171,7 +170,7 @@ class PlayerViewModel : ViewModel() {
                         }
                     } catch (e: YoutubeDLException) {
                         withContext(Dispatchers.Main) {
-                            val toast = Toast.makeText(context, "Unsupported URL, the video doesn't exist or YoutubeDL is out of date", Toast.LENGTH_LONG)
+                            val toast = Toast.makeText(context, context.getString(R.string.downloader_error_generic_toast), Toast.LENGTH_LONG)
                             toast.show()
                         }
                     }
@@ -254,7 +253,7 @@ class PlayerViewModel : ViewModel() {
                     }
                 } catch (e: YoutubeDLException) {
                     withContext(Dispatchers.Main) {
-                        val toast = Toast.makeText(context, "Unsupported URL, the video doesn't exist or YoutubeDL is out of date", Toast.LENGTH_LONG)
+                        val toast = Toast.makeText(context, context.getString(R.string.downloader_error_generic_toast), Toast.LENGTH_LONG)
                         toast.show()
                     }
                 }
@@ -297,7 +296,7 @@ class PlayerViewModel : ViewModel() {
 
     fun copyVideoTo(context: Context, uri: Uri?) {
         if (uri == null) {
-            val toast = Toast.makeText(context, "Failed to download video", Toast.LENGTH_LONG)
+            val toast = Toast.makeText(context, context.getString(R.string.downloader_download_failed_toast), Toast.LENGTH_LONG)
             toast.show()
         } else {
             val videoFile = File(dataDir, "video.mp4")
@@ -310,7 +309,7 @@ class PlayerViewModel : ViewModel() {
                 }
             }
 
-            val toast = Toast.makeText(context, "Video file saved", Toast.LENGTH_LONG)
+            val toast = Toast.makeText(context, context.getString(R.string.downloader_download_success_toast), Toast.LENGTH_LONG)
             toast.show()
         }
     }

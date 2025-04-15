@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLException
+import dev.tobo.omneko.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,7 @@ class MainViewModel : ViewModel() {
     fun updateYoutubeDL(context: Context) {
         if (_updating.value) return
 
-        val toast = Toast.makeText(context, "Now updating YoutubeDL", Toast.LENGTH_SHORT)
+        val toast = Toast.makeText(context, context.getString(R.string.updating_youtubedl_toast), Toast.LENGTH_SHORT)
         toast.show()
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -31,7 +32,7 @@ class MainViewModel : ViewModel() {
                 YoutubeDL.getInstance().updateYoutubeDL(context)
 
                 withContext(Dispatchers.Main) {
-                    val toast = Toast.makeText(context, "Update complete", Toast.LENGTH_SHORT)
+                    val toast = Toast.makeText(context, context.getString(R.string.youtubedl_update_complete_toast), Toast.LENGTH_SHORT)
                     toast.show()
                 }
 
@@ -40,7 +41,7 @@ class MainViewModel : ViewModel() {
                 e.printStackTrace()
 
                 withContext(Dispatchers.Main) {
-                    val toast = Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT)
+                    val toast = Toast.makeText(context, context.getString(R.string.youtubedl_update_failed_toast), Toast.LENGTH_SHORT)
                     toast.show()
                 }
 

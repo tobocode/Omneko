@@ -1,5 +1,8 @@
 package dev.tobo.omneko
 
+const val PREFERENCE_KEY_FIRST_RUN = "first_run"
+const val PREFERENCE_DEFAULT_FIRST_RUN = true
+
 // Preference categories
 const val PREFERENCE_CATEGORY_GENERAL = "category_general"
 const val PREFERENCE_CATEGORY_DOWNLOAD = "category_download"

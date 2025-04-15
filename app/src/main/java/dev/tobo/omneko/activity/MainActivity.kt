@@ -36,9 +36,11 @@ import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.preference.PreferenceManager
-import dev.tobo.omneko.viewmodel.MainViewModel
+import dev.tobo.omneko.PREFERENCE_DEFAULT_FIRST_RUN
+import dev.tobo.omneko.PREFERENCE_KEY_FIRST_RUN
 import dev.tobo.omneko.R
 import dev.tobo.omneko.ui.theme.OmnekoTheme
+import dev.tobo.omneko.viewmodel.MainViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,12 +61,12 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
     LaunchedEffect(Unit) {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
-        if (preferences.getBoolean("firstRun", true)) {
-            val toast = Toast.makeText(context, "First run, updating YoutubeDL", Toast.LENGTH_SHORT)
+        if (preferences.getBoolean(PREFERENCE_KEY_FIRST_RUN, PREFERENCE_DEFAULT_FIRST_RUN)) {
+            val toast = Toast.makeText(context, context.getString(R.string.first_run_update_youtubedl_toast), Toast.LENGTH_SHORT)
             toast.show()
 
             preferences.edit {
-                putBoolean("firstRun", false)
+                putBoolean(PREFERENCE_KEY_FIRST_RUN, false)
             }
 
             viewModel.updateYoutubeDL(context)
@@ -81,7 +83,7 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                         titleContentColor = MaterialTheme.colorScheme.inverseSurface
                     ),
                     title = {
-                        Text(LocalContext.current.getString(R.string.app_name))
+                        Text(context.getString(R.string.app_name))
                     },
                     actions = {
                         IconButton(
@@ -103,7 +105,7 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                 modifier = modifier.padding(innerPadding).padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text("If you have trouble watching videos, try updating YoutubeDL")
+                Text(context.getString(R.string.update_youtubedl_prompt))
 
                 Button(modifier = Modifier.fillMaxWidth(),
                     enabled = !updating,
@@ -111,11 +113,11 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                         viewModel.updateYoutubeDL(context)
                     }) {
 
-                    Text("Update YoutubeDL")
+                    Text(context.getString(R.string.update_youtubedl_button))
                 }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    Text("Here you can configure what links should automatically be opened")
+                    Text(context.getString(R.string.link_association_prompt))
 
                     Button(modifier = Modifier.fillMaxWidth(),
                         onClick = {
@@ -124,7 +126,7 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                             context.startActivity(intent)
                         }) {
 
-                        Text("Configure link handling")
+                        Text(context.getString(R.string.link_association_button))
                     }
                 }
             }

@@ -1,4 +1,60 @@
 <resources>
-    <string name="app_name">Omneko</string>
+    <string name="app_name" translatable="false">Omneko</string>
+
+    <!-- MainActivity -->
+    <string name="first_run_update_youtubedl_toast">First run, updating YoutubeDL</string>
+    <string name="update_youtubedl_prompt">If you have trouble watching videos, try updating YoutubeDL</string>
+    <string name="update_youtubedl_button">Update YoutubeDL</string>
+    <string name="link_association_prompt">Here you can configure what links should automatically be opened</string>
+    <string name="link_association_button">Configure link handling</string>
+
+    <!-- MainViewModel -->
+    <string name="updating_youtubedl_toast">Now updating YoutubeDL</string>
+    <string name="youtubedl_update_complete_toast">Update complete</string>
+    <string name="youtubedl_update_failed_toast">Update failed</string>
+
+    <!-- SettingsActivity -->
     <string name="title_activity_settings">Settings</string>
+
+    <string name="theme_follow_system">Follow System</string>
+    <string name="theme_dark_mode">Dark mode</string>
+    <string name="theme_light_mode">Light mode</string>
+
+    <string name="comment_download_unlimited">All (Downloading may take a long time)</string>
+
+    <string name="download_quality_best">High</string>
+    <string name="download_quality_worst">Low</string>
+    <string name="download_quality_custom">Custom</string>
+
+    <string name="preference_category_general">General</string>
+    <string name="preference_category_download">Download</string>
+
+    <string name="preference_theme_title">Theme</string>
+    <string name="preference_max_comments_title">Maximum number of comments to download</string>
+    <string name="preference_use_aria2c_title">Usa Aria2c for downloads</string>
+    <string name="preference_use_aria2c_summary">Try both and see which gives you faster downloads</string>
+    <string name="preference_download_quality_title">Download quality</string>
+    <string name="preference_custom_download_quality_title">Custom download quality</string>
+    <string name="preference_footer_custom_download_quality">The custom download quality field requires a valid string that can be passed to the \"-S\" parameter of yt-dlp, which will then automatically be preceded with the \"ext:mp4\" format selector. Invalid values may cause the download to fail. If you\'re unsure about this, use one of the predefined quality profiles.</string>
+
+    <!-- PlayerActivity -->
+    <string name="downloading_video_indicator">Downloading video</string>
+
+    <string name="video_info_tab">About</string>
+    <string name="comments_tab">Comments</string>
+
+    <string name="video_info_uploader">Uploader: @%1$s</string>
+    <string name="video_info_description">Description:</string>
+    <string name="video_info_view_count">View count: %1$d</string>
+    <string name="video_info_like_count">Like count: %1$d</string>
+
+    <string name="no_comments_indicator">No comments available</string>
+    <string name="comments_show_replies">Show replies</string>
+    <string name="comments_hide_replies">Hide replies</string>
+
+    <!-- PlayerViewModel -->
+    <string name="downloader_error_invalid_url_toast">Invalid URL</string>
+    <string name="downloader_error_generic_toast">Unsupported URL, the video doesn\'t exist or YoutubeDL is out of date</string>
+    <string name="downloader_download_failed_toast">Failed to download video</string>
+    <string name="downloader_download_success_toast">Video file saved</string>
 </resources>

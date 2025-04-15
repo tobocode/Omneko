@@ -76,6 +76,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -83,9 +84,10 @@ import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.Player
 import androidx.media3.ui.compose.PlayerSurface
+import dev.tobo.omneko.R
+import dev.tobo.omneko.ui.theme.OmnekoTheme
 import dev.tobo.omneko.viewmodel.Comment
 import dev.tobo.omneko.viewmodel.PlayerViewModel
-import dev.tobo.omneko.ui.theme.OmnekoTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -276,7 +278,7 @@ fun LabeledProgress(modifier: Modifier = Modifier, progress: Float) {
         )
 
         Text(
-            "Downloading video",
+            stringResource(R.string.downloading_video_indicator),
             color = Color.White,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
@@ -321,7 +323,7 @@ fun InfoSheet(mutableShowInfoSheet: MutableState<Boolean> = mutableStateOf(true)
                 )
             }
         ) {
-            listOf("About", "Comments").forEachIndexed { index, tabTitle ->
+            listOf(stringResource(R.string.video_info_tab), stringResource(R.string.comments_tab)).forEachIndexed { index, tabTitle ->
                 Tab(
                     selected = selectedTabIndex == index,
                     onClick = {
@@ -357,7 +359,7 @@ fun VideoInfoPage(viewModel: PlayerViewModel = viewModel()) {
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(playerState.title, fontWeight = FontWeight.Bold)
-        Text("Uploader: @${playerState.uploader}")
+        Text(stringResource(R.string.video_info_uploader, playerState.uploader))
 
         // This creates a link that should open the uploaders channel in the browser,
         // but if the app is configured to handle the sites links, it may start downloading all
@@ -379,13 +381,13 @@ fun VideoInfoPage(viewModel: PlayerViewModel = viewModel()) {
 
         HorizontalDivider()
 
-        Text("Description:")
+        Text(stringResource(R.string.video_info_description))
         Text(playerState.description)
 
         HorizontalDivider()
 
-        Text("View count: ${playerState.viewCount}")
-        Text("Like count: ${playerState.likeCount}")
+        Text(stringResource(R.string.video_info_view_count, playerState.viewCount))
+        Text(stringResource(R.string.video_info_like_count, playerState.likeCount))
     }
 }
 
@@ -409,7 +411,7 @@ fun CommentPage(viewModel: PlayerViewModel = viewModel()) {
             }
         } else {
             Box(modifier = Modifier.fillMaxWidth()) {
-                Text("No comments available", modifier = Modifier.padding(100.dp).align(Alignment.Center))
+                Text(stringResource(R.string.no_comments_indicator), modifier = Modifier.padding(100.dp).align(Alignment.Center))
             }
         }
     }
@@ -432,9 +434,9 @@ fun Comment(comment: Comment, viewModel: PlayerViewModel = viewModel()) {
                 }
             ) {
                 if (showReplies) {
-                    Text("Hide replies")
+                    Text(stringResource(R.string.comments_hide_replies))
                 } else {
-                    Text("Show replies")
+                    Text(stringResource(R.string.comments_show_replies))
                 }
             }
 

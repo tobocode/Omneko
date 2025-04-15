@@ -1,6 +1,7 @@
 package dev.tobo.omneko.activity
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,6 +24,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.preference.PreferenceManager
@@ -68,28 +70,28 @@ class SettingsActivity : ComponentActivity() {
     }
 }
 
-fun themeSettingString(setting: String): String {
+fun themeSettingString(context: Context, setting: String): String {
     return when (setting) {
-        PREFERENCE_THEME_SYSTEM -> "Follow System"
-        PREFERENCE_THEME_DARK -> "Dark mode"
-        PREFERENCE_THEME_LIGHT -> "Light mode"
+        PREFERENCE_THEME_SYSTEM -> context.getString(R.string.theme_follow_system)
+        PREFERENCE_THEME_DARK -> context.getString(R.string.theme_dark_mode)
+        PREFERENCE_THEME_LIGHT -> context.getString(R.string.theme_light_mode)
         else -> "null"
     }
 }
 
-fun commentsLimitString(setting: Int): String {
+fun commentsLimitString(context: Context, setting: Int): String {
     if (setting == 0) {
-        return "All (Downloading may take a long time)"
+        return context.getString(R.string.comment_download_unlimited)
     }
 
     return setting.toString()
 }
 
-fun downloadQualityString(setting: String): String {
+fun downloadQualityString(context: Context, setting: String): String {
     return when (setting) {
-        PREFERENCE_DOWNLOAD_QUALITY_BEST -> "High"
-        PREFERENCE_DOWNLOAD_QUALITY_WORST -> "Low"
-        PREFERENCE_DOWNLOAD_QUALITY_CUSTOM -> "Custom"
+        PREFERENCE_DOWNLOAD_QUALITY_BEST -> context.getString(R.string.download_quality_best)
+        PREFERENCE_DOWNLOAD_QUALITY_WORST -> context.getString(R.string.download_quality_worst)
+        PREFERENCE_DOWNLOAD_QUALITY_CUSTOM -> context.getString(R.string.download_quality_custom)
         else -> "null"
     }
 }
@@ -117,7 +119,7 @@ fun SettingsLayout(modifier: Modifier = Modifier) {
                         titleContentColor = MaterialTheme.colorScheme.inverseSurface
                     ),
                     title = {
-                        Text(LocalContext.current.getString(R.string.title_activity_settings))
+                        Text(context.getString(R.string.title_activity_settings))
                     },
                     navigationIcon = {
                         IconButton(onClick = { activity?.finish() }) {
@@ -136,60 +138,60 @@ fun SettingsLayout(modifier: Modifier = Modifier) {
                 LazyColumn(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
                     preferenceCategory(
                         key = PREFERENCE_CATEGORY_GENERAL,
-                        title = { Text("General") }
+                        title = { Text(stringResource(R.string.preference_category_general)) }
                     )
 
                     listPreference(
                         key = PREFERENCE_KEY_THEME,
                         defaultValue = PREFERENCE_DEFAULT_THEME,
                         values = PREFERENCE_VALUES_THEME,
-                        title = { Text("Theme") },
-                        summary = { Text(themeSettingString(it)) },
-                        valueToText = { AnnotatedString(themeSettingString(it)) }
+                        title = { Text(stringResource(R.string.preference_theme_title)) },
+                        summary = { Text(themeSettingString(context, it)) },
+                        valueToText = { AnnotatedString(themeSettingString(context, it)) }
                     )
 
                     preferenceCategory(
                         key = PREFERENCE_CATEGORY_DOWNLOAD,
-                        title = { Text("Download") }
+                        title = { Text(stringResource(R.string.preference_category_download)) }
                     )
 
                     listPreference(
                         key = PREFERENCE_KEY_MAX_COMMENTS,
                         defaultValue = PREFERENCE_DEFAULT_MAX_COMMENTS,
                         values = PREFERENCE_LIST_MAX_COMMENTS,
-                        title = { Text("Maximum number of comments to download") },
-                        summary = { Text(commentsLimitString(it)) },
-                        valueToText = { AnnotatedString(commentsLimitString(it)) }
+                        title = { Text(stringResource(R.string.preference_max_comments_title)) },
+                        summary = { Text(commentsLimitString(context, it)) },
+                        valueToText = { AnnotatedString(commentsLimitString(context, it)) }
                     )
 
                     switchPreference(
                         key = PREFERENCE_KEY_USE_ARIA2C,
                         defaultValue = PREFERENCE_DEFAULT_USE_ARIA2C,
-                        title = { Text("Usa Aria2c for downloads") },
-                        summary = { Text("Try both and see which gives you faster downloads") }
+                        title = { Text(stringResource(R.string.preference_use_aria2c_title)) },
+                        summary = { Text(stringResource(R.string.preference_use_aria2c_summary)) }
                     )
 
                     listPreference(
                         key = PREFERENCE_KEY_DOWNLOAD_QUALITY,
                         defaultValue = PREFERENCE_DEFAULT_DOWNLOAD_QUALITY,
                         values = PREFERENCE_VALUES_DOWNLOAD_QUALITY,
-                        title = { Text("Download quality") },
-                        summary = { Text(downloadQualityString(it)) },
-                        valueToText = { AnnotatedString(downloadQualityString(it)) }
+                        title = { Text(stringResource(R.string.preference_download_quality_title)) },
+                        summary = { Text(downloadQualityString(context, it)) },
+                        valueToText = { AnnotatedString(downloadQualityString(context, it)) }
                     )
 
-                    if (downloadQualityPreference == "custom") {
+                    if (downloadQualityPreference == PREFERENCE_DOWNLOAD_QUALITY_CUSTOM) {
                         textFieldPreference(
                             key = PREFERENCE_KEY_CUSTOM_DOWNLOAD_QUALITY,
                             defaultValue = PREFERENCE_DEFAULT_CUSTOM_DOWNLOAD_QUALITY,
-                            title = { Text("Custom download quality") },
+                            title = { Text(stringResource(R.string.preference_custom_download_quality_title)) },
                             textToValue = { it },
                             summary = { Text(it) }
                         )
 
                         footerPreference(
                             key = PREFERENCE_FOOTER_CUSTOM_DOWNLOAD_QUALITY,
-                            summary = { Text("The custom download quality field requires a valid string that can be passed to the \"-S\" parameter of yt-dlp, which will then automatically be preceded with the \"ext:mp4\" format selector. Invalid values may cause the download to fail. If you're unsure about this, use one of the predefined quality profiles.") }
+                            summary = { Text(stringResource(R.string.preference_footer_custom_download_quality)) }
                         )
                     }
                 }
