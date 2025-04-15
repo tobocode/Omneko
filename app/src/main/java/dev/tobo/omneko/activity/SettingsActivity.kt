@@ -26,6 +26,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import dev.tobo.omneko.PREFERENCE_DEFAULT_MAX_COMMENTS
 import dev.tobo.omneko.PREFERENCE_DEFAULT_THEME
 import dev.tobo.omneko.PREFERENCE_DEFAULT_USE_ARIA2C
+import dev.tobo.omneko.PREFERENCE_KEY_MAX_COMMENTS
+import dev.tobo.omneko.PREFERENCE_KEY_THEME
+import dev.tobo.omneko.PREFERENCE_KEY_USE_ARIA2C
+import dev.tobo.omneko.PREFERENCE_LIST_MAX_COMMENTS
+import dev.tobo.omneko.PREFERENCE_THEME_DARK
+import dev.tobo.omneko.PREFERENCE_THEME_LIGHT
+import dev.tobo.omneko.PREFERENCE_THEME_SYSTEM
+import dev.tobo.omneko.PREFERENCE_VALUES_THEME
 import dev.tobo.omneko.R
 import dev.tobo.omneko.ui.theme.OmnekoTheme
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
@@ -45,9 +53,9 @@ class SettingsActivity : ComponentActivity() {
 
 fun themeSettingString(setting: String): String {
     return when (setting) {
-        "system" -> "Follow System"
-        "dark" -> "Dark mode"
-        "light" -> "Light mode"
+        PREFERENCE_THEME_SYSTEM -> "Follow System"
+        PREFERENCE_THEME_DARK -> "Dark mode"
+        PREFERENCE_THEME_LIGHT -> "Light mode"
         else -> "null"
     }
 }
@@ -99,9 +107,9 @@ fun SettingsLayout(modifier: Modifier = Modifier) {
                     )
 
                     listPreference(
-                        key = "theme",
+                        key = PREFERENCE_KEY_THEME,
                         defaultValue = PREFERENCE_DEFAULT_THEME,
-                        values = listOf("system", "dark", "light"),
+                        values = PREFERENCE_VALUES_THEME,
                         title = { Text("Theme") },
                         summary = { Text(themeSettingString(it)) },
                         valueToText = { AnnotatedString(themeSettingString(it)) }
@@ -113,16 +121,16 @@ fun SettingsLayout(modifier: Modifier = Modifier) {
                     )
 
                     listPreference(
-                        key = "max_comments",
+                        key = PREFERENCE_KEY_MAX_COMMENTS,
                         defaultValue = PREFERENCE_DEFAULT_MAX_COMMENTS,
-                        values = listOf(0, 10, 50, 100, 1000),
+                        values = PREFERENCE_LIST_MAX_COMMENTS,
                         title = { Text("Maximum number of comments to download") },
                         summary = { Text(commentsLimitString(it)) },
                         valueToText = { AnnotatedString(commentsLimitString(it)) }
                     )
 
                     switchPreference(
-                        key = "use_aria2c",
+                        key = PREFERENCE_KEY_USE_ARIA2C,
                         defaultValue = PREFERENCE_DEFAULT_USE_ARIA2C,
                         title = { Text("Usa Aria2c for downloads") },
                         summary = { Text("Try both and see which gives you faster downloads") }

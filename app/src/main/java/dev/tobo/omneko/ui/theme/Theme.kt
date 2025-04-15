@@ -20,6 +20,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.preference.PreferenceManager
 import com.fredporciuncula.flow.preferences.FlowSharedPreferences
 import dev.tobo.omneko.PREFERENCE_DEFAULT_THEME
+import dev.tobo.omneko.PREFERENCE_KEY_THEME
+import dev.tobo.omneko.PREFERENCE_THEME_DARK
+import dev.tobo.omneko.PREFERENCE_THEME_LIGHT
+import dev.tobo.omneko.PREFERENCE_THEME_SYSTEM
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -54,12 +58,12 @@ fun OmnekoTheme(
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(LocalContext.current)
     val flowPreferences = FlowSharedPreferences(preferences)
-    val themePreference by flowPreferences.getString("theme", PREFERENCE_DEFAULT_THEME).asFlow().collectAsState(PREFERENCE_DEFAULT_THEME)
+    val themePreference by flowPreferences.getString(PREFERENCE_KEY_THEME, PREFERENCE_DEFAULT_THEME).asFlow().collectAsState(PREFERENCE_DEFAULT_THEME)
 
     val darkTheme = when (themePreference) {
-        "system" -> isSystemInDarkTheme()
-        "dark" -> true
-        "light" -> false
+        PREFERENCE_THEME_SYSTEM -> isSystemInDarkTheme()
+        PREFERENCE_THEME_DARK -> true
+        PREFERENCE_THEME_LIGHT -> false
         else -> isSystemInDarkTheme()
     }
 
