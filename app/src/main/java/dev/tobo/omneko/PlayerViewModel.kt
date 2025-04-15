@@ -106,6 +106,9 @@ class PlayerViewModel : ViewModel() {
                 )
             }
 
+            val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+            val flowPreferences = FlowSharedPreferences(preferences)
+
             dataDir = File(context.cacheDir, "video")
             dataDir?.deleteRecursively()
 
@@ -119,11 +122,18 @@ class PlayerViewModel : ViewModel() {
                     try {
                         YoutubeDL.getInstance().init(context)
                         FFmpeg.getInstance().init(context)
-                        Aria2c.getInstance().init(context)
+
+                        if (flowPreferences.getBoolean("use_aria2c", PREFERENCE_DEFAULT_USE_ARIA2C).get()) {
+                            Aria2c.getInstance().init(context)
+                        }
 
                         val request = YoutubeDLRequest(videoUri.toString())
                         request.addOption("-o", dataDir?.path + "/video.%(ext)s")
-                        request.addOption("--downloader", "libaria2c.so")
+
+                        if (flowPreferences.getBoolean("use_aria2c", PREFERENCE_DEFAULT_USE_ARIA2C).get()) {
+                            request.addOption("--downloader", "libaria2c.so")
+                        }
+
                         request.addOption("-S", "ext:mp4")
                         request.addOption("--write-info-json")
                         YoutubeDL.getInstance().execute(request) { progress, etaInSeconds, text ->
@@ -183,7 +193,7 @@ class PlayerViewModel : ViewModel() {
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
             val flowPreferences = FlowSharedPreferences(preferences)
 
-            val maxComments = flowPreferences.getInt("max_comments", 100).get()
+            val maxComments = flowPreferences.getInt("max_comments", PREFERENCE_DEFAULT_MAX_COMMENTS).get()
             val maxCommentsArg = "max_comments=${if (maxComments == 0) "all" else maxComments},all,all,all"
 
             viewModelScope.launch(Dispatchers.IO) {
@@ -192,11 +202,18 @@ class PlayerViewModel : ViewModel() {
                 try {
                     YoutubeDL.getInstance().init(context)
                     FFmpeg.getInstance().init(context)
-                    Aria2c.getInstance().init(context)
+
+                    if (flowPreferences.getBoolean("use_aria2c", PREFERENCE_DEFAULT_USE_ARIA2C).get()) {
+                        Aria2c.getInstance().init(context)
+                    }
 
                     val request = YoutubeDLRequest(videoUri.toString())
                     request.addOption("-o", dataDir?.path + "/video_comments.%(ext)s")
-                    request.addOption("--downloader", "libaria2c.so")
+
+                    if (flowPreferences.getBoolean("use_aria2c", PREFERENCE_DEFAULT_USE_ARIA2C).get()) {
+                        request.addOption("--downloader", "libaria2c.so")
+                    }
+
                     request.addOption("--write-comments")
                     request.addOption("--skip-download")
 

@@ -27,6 +27,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.tobo.omneko.ui.theme.OmnekoTheme
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
+import me.zhanghai.compose.preference.switchPreference
 
 class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,7 +91,7 @@ fun SettingsLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = vie
                 LazyColumn(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
                     listPreference(
                         key = "theme",
-                        defaultValue = "system",
+                        defaultValue = PREFERENCE_DEFAULT_THEME,
                         values = listOf("system", "dark", "light"),
                         title = { Text("Theme") },
                         summary = { Text(themeSettingString(it)) },
@@ -99,11 +100,18 @@ fun SettingsLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = vie
 
                     listPreference(
                         key = "max_comments",
-                        defaultValue = 100,
+                        defaultValue = PREFERENCE_DEFAULT_MAX_COMMENTS,
                         values = listOf(0, 10, 50, 100, 1000),
                         title = { Text("Maximum number of comments to download") },
                         summary = { Text(commentsLimitString(it)) },
                         valueToText = { AnnotatedString(commentsLimitString(it)) }
+                    )
+
+                    switchPreference(
+                        key = "use_aria2c",
+                        defaultValue = PREFERENCE_DEFAULT_USE_ARIA2C,
+                        title = { Text("Usa Aria2c for downloads") },
+                        summary = { Text("Try both and see which gives you faster downloads") }
                     )
                 }
             }
