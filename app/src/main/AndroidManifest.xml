@@ -26,11 +26,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.SettingsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_settings"
-            android:theme="@style/Theme.Omneko" />
-        <activity
             android:name=".activity.PlayerActivity"
             android:exported="true"
             android:theme="@style/Theme.Omneko">

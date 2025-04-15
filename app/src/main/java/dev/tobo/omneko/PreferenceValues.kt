@@ -7,6 +7,10 @@ const val PREFERENCE_DEFAULT_FIRST_RUN = true
 const val PREFERENCE_CATEGORY_GENERAL = "category_general"
 const val PREFERENCE_CATEGORY_DOWNLOAD = "category_download"
 
+// Button preferences
+const val PREFERENCE_KEY_UPDATE_YOUTUBEDL = "update_youtubedl"
+const val PREFERENCE_KEY_LINK_ASSOCIATION = "link_association"
+
 // Preference footers
 const val PREFERENCE_FOOTER_CUSTOM_DOWNLOAD_QUALITY = "footer_custom_download_quality"
 
