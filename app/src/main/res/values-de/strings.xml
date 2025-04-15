@@ -16,6 +16,7 @@
     <string name="download_quality_custom">Benutzerdefiniert</string>
     <string name="preference_category_general">Allgemein</string>
     <string name="preference_category_download">Herunterladen</string>
+    <string name="preference_category_donate">Spenden</string>
     <string name="preference_theme_title">Aussehen</string>
     <string name="preference_max_comments_title">Maximale anzahl an herunterzuladenen Kommentaren</string>
     <string name="preference_use_aria2c_title">Nutze zum Herunterladen Aria2c</string>

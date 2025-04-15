@@ -6,11 +6,18 @@ const val PREFERENCE_DEFAULT_FIRST_RUN = true
 // Preference categories
 const val PREFERENCE_CATEGORY_GENERAL = "category_general"
 const val PREFERENCE_CATEGORY_DOWNLOAD = "category_download"
+const val PREFERENCE_CATEGORY_DONATE = "category_donate"
 
 // Button preferences
 const val PREFERENCE_KEY_UPDATE_YOUTUBEDL = "button_update_youtubedl"
 const val PREFERENCE_KEY_LINK_ASSOCIATION = "button_link_association"
 const val PREFERENCE_KEY_LANGUAGE = "button_language"
+
+// Donation preferences
+const val PREFERENCE_KEY_DONATE_MONERO = "donate_monero"
+const val PREFERENCE_ADDRESS_DONATE_MONERO = "84pqAhMwbXWV7jjnA7zpNULYtWrYdJjoCPgrzXbW7AbtDDF6FWY2zJbK3nfA28PRUrfEHPV84VaCg4TW3E3VkXsL5w4dJNm"
+const val PREFERENCE_KEY_DONATE_SOLANA = "donate_solana"
+const val PREFERENCE_ADDRESS_DONATE_SOLANA = "4TUA4GP6sp682HLbmcgL6oY9SyxBcaKXj9NCwqVDSAUp"
 
 // Preference footers
 const val PREFERENCE_FOOTER_CUSTOM_DOWNLOAD_QUALITY = "footer_custom_download_quality"

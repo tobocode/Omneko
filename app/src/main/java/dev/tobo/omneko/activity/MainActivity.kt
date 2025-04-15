@@ -12,7 +12,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -23,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -32,6 +36,9 @@ import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.preference.PreferenceManager
 import com.fredporciuncula.flow.preferences.FlowSharedPreferences
+import dev.tobo.omneko.PREFERENCE_ADDRESS_DONATE_MONERO
+import dev.tobo.omneko.PREFERENCE_ADDRESS_DONATE_SOLANA
+import dev.tobo.omneko.PREFERENCE_CATEGORY_DONATE
 import dev.tobo.omneko.PREFERENCE_CATEGORY_DOWNLOAD
 import dev.tobo.omneko.PREFERENCE_CATEGORY_GENERAL
 import dev.tobo.omneko.PREFERENCE_DEFAULT_CUSTOM_DOWNLOAD_QUALITY
@@ -45,6 +52,8 @@ import dev.tobo.omneko.PREFERENCE_DOWNLOAD_QUALITY_CUSTOM
 import dev.tobo.omneko.PREFERENCE_DOWNLOAD_QUALITY_WORST
 import dev.tobo.omneko.PREFERENCE_FOOTER_CUSTOM_DOWNLOAD_QUALITY
 import dev.tobo.omneko.PREFERENCE_KEY_CUSTOM_DOWNLOAD_QUALITY
+import dev.tobo.omneko.PREFERENCE_KEY_DONATE_MONERO
+import dev.tobo.omneko.PREFERENCE_KEY_DONATE_SOLANA
 import dev.tobo.omneko.PREFERENCE_KEY_DOWNLOAD_QUALITY
 import dev.tobo.omneko.PREFERENCE_KEY_FIRST_RUN
 import dev.tobo.omneko.PREFERENCE_KEY_LANGUAGE
@@ -110,6 +119,7 @@ fun downloadQualityString(context: Context, setting: String): String {
 @Composable
 fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewModel()) {
     val context = LocalContext.current
+    val clipboardManager = LocalClipboardManager.current
     val updating by viewModel.updating.collectAsState()
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(LocalContext.current)
@@ -241,6 +251,33 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                             key = PREFERENCE_FOOTER_CUSTOM_DOWNLOAD_QUALITY,
                             summary = { Text(stringResource(R.string.preference_footer_custom_download_quality)) }
                         )
+                    }
+
+                    preferenceCategory(
+                        key = PREFERENCE_CATEGORY_DONATE,
+                        title = { Text(stringResource(R.string.preference_category_donate)) }
+                    )
+
+                    preference(
+                        key = PREFERENCE_KEY_DONATE_MONERO,
+                        title = { Text("Monero") },
+                        summary = { Text(PREFERENCE_ADDRESS_DONATE_MONERO) },
+                        icon = {
+                            Icon(imageVector = Icons.Filled.ContentCopy, contentDescription = "Monero")
+                        }
+                    ) {
+                        clipboardManager.setText(AnnotatedString(PREFERENCE_ADDRESS_DONATE_MONERO))
+                    }
+
+                    preference(
+                        key = PREFERENCE_KEY_DONATE_SOLANA,
+                        title = { Text("Solana") },
+                        summary = { Text(PREFERENCE_ADDRESS_DONATE_SOLANA) },
+                        icon = {
+                            Icon(imageVector = Icons.Filled.ContentCopy, contentDescription = "Solana")
+                        }
+                    ) {
+                        clipboardManager.setText(AnnotatedString(PREFERENCE_ADDRESS_DONATE_SOLANA))
                     }
                 }
             }

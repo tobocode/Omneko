@@ -24,6 +24,7 @@
 
     <string name="preference_category_general">General</string>
     <string name="preference_category_download">Download</string>
+    <string name="preference_category_donate">Donate</string>
 
     <string name="preference_theme_title">Theme</string>
     <string name="preference_max_comments_title">Maximum number of comments to download</string>
