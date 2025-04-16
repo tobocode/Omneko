@@ -14,17 +14,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -115,6 +121,11 @@ fun downloadQualityString(context: Context, setting: String): String {
     }
 }
 
+fun isConnectionMetered(): Boolean {
+    // TODO implement this function
+    return true
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewModel()) {
@@ -129,6 +140,8 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
         PREFERENCE_DEFAULT_DOWNLOAD_QUALITY
     ).asFlow().collectAsState(PREFERENCE_DEFAULT_DOWNLOAD_QUALITY)
 
+    var showMeteredAlertDialog by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
@@ -140,7 +153,11 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                 putBoolean(PREFERENCE_KEY_FIRST_RUN, false)
             }
 
-            viewModel.updateYoutubeDL(context)
+            if (isConnectionMetered()) {
+                showMeteredAlertDialog = true
+            } else {
+                viewModel.updateYoutubeDL(context)
+            }
         }
     }
 
@@ -159,6 +176,16 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                 )
             }
         ) { innerPadding ->
+            if (showMeteredAlertDialog) {
+                MeteredAlertDialog(
+                    onDismissRequest = { showMeteredAlertDialog = false },
+                    onConfirmation = {
+                        showMeteredAlertDialog = false
+                        viewModel.updateYoutubeDL(context)
+                    }
+                )
+            }
+
             ProvidePreferenceLocals {
                 LazyColumn(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
                     preferenceCategory(
@@ -172,7 +199,11 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                         summary = { Text(stringResource(R.string.update_youtubedl_button_summary)) },
                         enabled = !updating
                     ) {
-                        viewModel.updateYoutubeDL(context)
+                        if (isConnectionMetered()) {
+                            showMeteredAlertDialog = true
+                        } else {
+                            viewModel.updateYoutubeDL(context)
+                        }
                     }
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -283,6 +314,33 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
             }
         }
     }
+}
+
+@Composable
+fun MeteredAlertDialog(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit
+) {
+    AlertDialog(
+        icon = { Icon(Icons.Filled.Warning, contentDescription = "Warning") },
+        title = { Text(stringResource(R.string.metered_alert_dialog_title)) },
+        text = { Text(stringResource(R.string.metered_alert_dialog_text)) },
+        onDismissRequest = { onDismissRequest() },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirmation() }
+            ) {
+                Text(stringResource(R.string.metered_alert_dialog_confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = { onDismissRequest() }
+            ) {
+                Text(stringResource(R.string.metered_alert_dialog_dismiss))
+            }
+        }
+    )
 }
 
 @Preview(showBackground = true)
