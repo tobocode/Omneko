@@ -87,7 +87,9 @@ import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.Player
 import androidx.media3.ui.compose.PlayerSurface
+import dev.tobo.omneko.MeteredAlertDialog
 import dev.tobo.omneko.R
+import dev.tobo.omneko.isConnectionMetered
 import dev.tobo.omneko.ui.theme.OmnekoTheme
 import dev.tobo.omneko.viewmodel.Comment
 import dev.tobo.omneko.viewmodel.PlayerViewModel
@@ -138,6 +140,8 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
     val playerState by viewModel.playerState.collectAsState()
     var videoProgress by remember { mutableFloatStateOf(0f) }
 
+    var showMeteredAlertDialog by remember { mutableStateOf(false) }
+
     val mutableShowInfoSheet = remember { mutableStateOf (false) }
     var showInfoSheet by mutableShowInfoSheet
 
@@ -151,7 +155,11 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
     }
 
     LaunchedEffect(Unit) {
-        viewModel.downloadAndPlayVideo(context, videoUri)
+        if (isConnectionMetered(context)) {
+            showMeteredAlertDialog = true
+        } else {
+            viewModel.downloadAndPlayVideo(context, videoUri)
+        }
 
         while (true) {
             delay(100)
@@ -173,6 +181,20 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
     }
 
     OmnekoTheme(forceLightStatusBar = true) {
+        if (showMeteredAlertDialog) {
+            MeteredAlertDialog(
+                onDismissRequest = {
+                    showMeteredAlertDialog = false
+                    activity?.finish()
+                },
+                onConfirmation = {
+                    showMeteredAlertDialog = false
+                    viewModel.downloadAndPlayVideo(context, videoUri)
+                },
+                stringResource(R.string.metered_alert_dialog_download_video_text)
+            )
+        }
+
         Scaffold(modifier = Modifier.fillMaxSize(), containerColor = Color.Black) { innerPadding ->
             Box(Modifier.padding(innerPadding)) {
                 if (playerState.player == null) {

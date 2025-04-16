@@ -25,7 +25,8 @@
     <string name="preference_custom_download_quality_title">Benutzerdefinierte Downloadqualität</string>
     <string name="preference_footer_custom_download_quality">Das Feld für die benutzerdefinierte Downloadqualität erwartet eine für yt-dlp über den \"-S\" parameter lesbare Zeichenkette, welchem automatisch \"ext:mp4\" vorangestellt wird. Ungültige Eingaben können zum Fehlschlagen von Downloads führen. Solltest du dir unsicher sein, nutze eines der vorgegebenen Qualitätsprofile.</string>
     <string name="metered_alert_dialog_title">Getaktete Verbindung</string>
-    <string name="metered_alert_dialog_text">Deine Verbindung ist aktuell getaktet. Bist du sicher, dass du YoutubeDL aktualisieren willst?</string>
+    <string name="metered_alert_dialog_update_youtubedl_text">Deine Verbindung ist aktuell getaktet. Bist du sicher, dass du YoutubeDL aktualisieren willst?</string>
+    <string name="metered_alert_dialog_download_video_text">Deine Verbindung ist aktuell getaktet. Bist du sicher, dass du das Video herunterladen willst?</string>
     <string name="metered_alert_dialog_confirm">Ja</string>
     <string name="metered_alert_dialog_dismiss">Nein</string>
     <string name="updating_youtubedl_toast">YoutubeDL wird aktualisiert</string>

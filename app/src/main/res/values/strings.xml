@@ -35,7 +35,8 @@
     <string name="preference_footer_custom_download_quality">The custom download quality field requires a valid string that can be passed to the \"-S\" parameter of yt-dlp, which will then automatically be preceded with the \"ext:mp4\" format selector. Invalid values may cause the download to fail. If you\'re unsure about this, use one of the predefined quality profiles.</string>
 
     <string name="metered_alert_dialog_title">Metered connection</string>
-    <string name="metered_alert_dialog_text">You are currently using a metered or cellular connection. Are you sure you want to update YoutubeDL now?</string>
+    <string name="metered_alert_dialog_update_youtubedl_text">You are currently using a metered connection. Are you sure you want to update YoutubeDL now?</string>
+    <string name="metered_alert_dialog_download_video_text">You are currently using a metered connection. Are you sure you want to download the video now?</string>
     <string name="metered_alert_dialog_confirm">Yes</string>
     <string name="metered_alert_dialog_dismiss">No</string>
 

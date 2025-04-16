@@ -2,7 +2,6 @@ package dev.tobo.omneko.activity
 
 import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -15,15 +14,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,6 +39,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.preference.PreferenceManager
 import com.fredporciuncula.flow.preferences.FlowSharedPreferences
+import dev.tobo.omneko.MeteredAlertDialog
 import dev.tobo.omneko.PREFERENCE_ADDRESS_DONATE_MONERO
 import dev.tobo.omneko.PREFERENCE_ADDRESS_DONATE_SOLANA
 import dev.tobo.omneko.PREFERENCE_CATEGORY_DONATE
@@ -76,6 +73,7 @@ import dev.tobo.omneko.PREFERENCE_THEME_SYSTEM
 import dev.tobo.omneko.PREFERENCE_VALUES_DOWNLOAD_QUALITY
 import dev.tobo.omneko.PREFERENCE_VALUES_THEME
 import dev.tobo.omneko.R
+import dev.tobo.omneko.isConnectionMetered
 import dev.tobo.omneko.ui.theme.OmnekoTheme
 import dev.tobo.omneko.viewmodel.MainViewModel
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
@@ -122,11 +120,6 @@ fun downloadQualityString(context: Context, setting: String): String {
     }
 }
 
-fun isConnectionMetered(context: Context): Boolean {
-    val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
-    return connectivityManager.isActiveNetworkMetered
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewModel()) {
@@ -163,6 +156,17 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
     }
 
     OmnekoTheme {
+        if (showMeteredAlertDialog) {
+            MeteredAlertDialog(
+                onDismissRequest = { showMeteredAlertDialog = false },
+                onConfirmation = {
+                    showMeteredAlertDialog = false
+                    viewModel.updateYoutubeDL(context)
+                },
+                stringResource(R.string.metered_alert_dialog_update_youtubedl_text)
+            )
+        }
+
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
@@ -177,16 +181,6 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                 )
             }
         ) { innerPadding ->
-            if (showMeteredAlertDialog) {
-                MeteredAlertDialog(
-                    onDismissRequest = { showMeteredAlertDialog = false },
-                    onConfirmation = {
-                        showMeteredAlertDialog = false
-                        viewModel.updateYoutubeDL(context)
-                    }
-                )
-            }
-
             ProvidePreferenceLocals {
                 LazyColumn(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
                     preferenceCategory(
@@ -315,33 +309,6 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
             }
         }
     }
-}
-
-@Composable
-fun MeteredAlertDialog(
-    onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit
-) {
-    AlertDialog(
-        icon = { Icon(Icons.Filled.Warning, contentDescription = "Warning") },
-        title = { Text(stringResource(R.string.metered_alert_dialog_title)) },
-        text = { Text(stringResource(R.string.metered_alert_dialog_text)) },
-        onDismissRequest = { onDismissRequest() },
-        confirmButton = {
-            TextButton(
-                onClick = { onConfirmation() }
-            ) {
-                Text(stringResource(R.string.metered_alert_dialog_confirm))
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = { onDismissRequest() }
-            ) {
-                Text(stringResource(R.string.metered_alert_dialog_dismiss))
-            }
-        }
-    )
 }
 
 @Preview(showBackground = true)
