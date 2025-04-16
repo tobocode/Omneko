@@ -29,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -167,8 +168,9 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
             )
         }
 
+        val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
         Scaffold(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
                 LargeTopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -177,7 +179,8 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                     ),
                     title = {
                         Text(context.getString(R.string.app_name))
-                    }
+                    },
+                    scrollBehavior = scrollBehavior
                 )
             }
         ) { innerPadding ->
