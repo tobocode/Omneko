@@ -16,6 +16,7 @@
     <string name="download_quality_custom">Benutzerdefiniert</string>
     <string name="preference_category_general">Allgemein</string>
     <string name="preference_category_download">Herunterladen</string>
+    <string name="preference_category_metered_warning">Warnungen bei getakteter Verbindung</string>
     <string name="preference_category_donate">Spenden</string>
     <string name="preference_theme_title">Aussehen</string>
     <string name="preference_max_comments_title">Maximale anzahl an herunterzuladenen Kommentaren</string>
@@ -24,6 +25,10 @@
     <string name="preference_download_quality_title">Downloadqualität</string>
     <string name="preference_custom_download_quality_title">Benutzerdefinierte Downloadqualität</string>
     <string name="preference_footer_custom_download_quality">Das Feld für die benutzerdefinierte Downloadqualität erwartet eine für yt-dlp über den \"-S\" parameter lesbare Zeichenkette, welchem automatisch \"ext:mp4\" vorangestellt wird. Ungültige Eingaben können zum Fehlschlagen von Downloads führen. Solltest du dir unsicher sein, nutze eines der vorgegebenen Qualitätsprofile.</string>
+    <string name="preference_metered_alert_update_youtubedl_title">Getaktete Verbingung beim Update von YoutubeDL</string>
+    <string name="preference_metered_alert_update_youtubedl_summary">Zeige eine Warnung vor dem Update von YoutubeDL bei einer getakteten Verbindung</string>
+    <string name="preference_metered_alert_download_video_title">Getaktete Verbingung beim Download eines Videos</string>
+    <string name="preference_metered_alert_download_video_summary">Zeige eine Warnung vor dem Download eines Videos bei einer getakteten Verbindung</string>
     <string name="metered_alert_dialog_title">Getaktete Verbindung</string>
     <string name="metered_alert_dialog_update_youtubedl_text">Deine Verbindung ist aktuell getaktet. Bist du sicher, dass du YoutubeDL aktualisieren willst?</string>
     <string name="metered_alert_dialog_download_video_text">Deine Verbindung ist aktuell getaktet. Bist du sicher, dass du das Video herunterladen willst?</string>

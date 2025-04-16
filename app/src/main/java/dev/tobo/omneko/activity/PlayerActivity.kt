@@ -87,7 +87,11 @@ import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.Player
 import androidx.media3.ui.compose.PlayerSurface
+import androidx.preference.PreferenceManager
+import com.fredporciuncula.flow.preferences.FlowSharedPreferences
 import dev.tobo.omneko.MeteredAlertDialog
+import dev.tobo.omneko.PREFERENCE_DEFAULT_METERED_WARNING_DOWNLOAD_VIDEO
+import dev.tobo.omneko.PREFERENCE_KEY_METERED_WARNING_DOWNLOAD_VIDEO
 import dev.tobo.omneko.R
 import dev.tobo.omneko.isConnectionMetered
 import dev.tobo.omneko.ui.theme.OmnekoTheme
@@ -142,6 +146,14 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
 
     var showMeteredAlertDialog by remember { mutableStateOf(false) }
 
+    val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+    val flowPreferences = FlowSharedPreferences(preferences)
+
+    val meteredVideoDownloadAlertEnabled = flowPreferences.getBoolean(
+        PREFERENCE_KEY_METERED_WARNING_DOWNLOAD_VIDEO,
+        PREFERENCE_DEFAULT_METERED_WARNING_DOWNLOAD_VIDEO
+    ).get()
+
     val mutableShowInfoSheet = remember { mutableStateOf (false) }
     var showInfoSheet by mutableShowInfoSheet
 
@@ -155,7 +167,7 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
     }
 
     LaunchedEffect(Unit) {
-        if (isConnectionMetered(context)) {
+        if (meteredVideoDownloadAlertEnabled && isConnectionMetered(context)) {
             showMeteredAlertDialog = true
         } else {
             viewModel.downloadAndPlayVideo(context, videoUri)

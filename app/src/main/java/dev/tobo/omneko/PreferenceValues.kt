@@ -6,6 +6,7 @@ const val PREFERENCE_DEFAULT_FIRST_RUN = true
 // Preference categories
 const val PREFERENCE_CATEGORY_GENERAL = "category_general"
 const val PREFERENCE_CATEGORY_DOWNLOAD = "category_download"
+const val PREFERENCE_CATEGORY_METERED_WARNING = "category_metered_warning"
 const val PREFERENCE_CATEGORY_DONATE = "category_donate"
 
 // Button preferences
@@ -63,3 +64,11 @@ const val PREFERENCE_DOWNLOAD_QUALITY_WORST_FORMAT = "+size,+br,+res,+fps"
 // Custom download quality preference
 const val PREFERENCE_KEY_CUSTOM_DOWNLOAD_QUALITY = "custom_download_quality"
 const val PREFERENCE_DEFAULT_CUSTOM_DOWNLOAD_QUALITY = ""
+
+// Metered youtubedl update warning
+const val PREFERENCE_KEY_METERED_WARNING_UPDATE_YOUTUBEDL = "warn_on_metered_youtubedl_update"
+const val PREFERENCE_DEFAULT_METERED_WARNING_UPDATE_YOUTUBEDL = true
+
+// Metered video download warning
+const val PREFERENCE_KEY_METERED_WARNING_DOWNLOAD_VIDEO = "warn_on_metered_video_download"
+const val PREFERENCE_DEFAULT_METERED_WARNING_DOWNLOAD_VIDEO = true

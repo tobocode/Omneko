@@ -24,6 +24,7 @@
 
     <string name="preference_category_general">General</string>
     <string name="preference_category_download">Download</string>
+    <string name="preference_category_metered_warning">Metered connection warnings</string>
     <string name="preference_category_donate">Donate</string>
 
     <string name="preference_theme_title">Theme</string>
@@ -33,6 +34,11 @@
     <string name="preference_download_quality_title">Download quality</string>
     <string name="preference_custom_download_quality_title">Custom download quality</string>
     <string name="preference_footer_custom_download_quality">The custom download quality field requires a valid string that can be passed to the \"-S\" parameter of yt-dlp, which will then automatically be preceded with the \"ext:mp4\" format selector. Invalid values may cause the download to fail. If you\'re unsure about this, use one of the predefined quality profiles.</string>
+
+    <string name="preference_metered_alert_update_youtubedl_title">Metered YoutubeDL update warning</string>
+    <string name="preference_metered_alert_update_youtubedl_summary">Warn before updating YoutubeDL on metered connections</string>
+    <string name="preference_metered_alert_download_video_title">Metered video download warning</string>
+    <string name="preference_metered_alert_download_video_summary">Warn before downloading a video on metered connections</string>
 
     <string name="metered_alert_dialog_title">Metered connection</string>
     <string name="metered_alert_dialog_update_youtubedl_text">You are currently using a metered connection. Are you sure you want to update YoutubeDL now?</string>

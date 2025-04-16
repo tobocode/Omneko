@@ -46,10 +46,13 @@ import dev.tobo.omneko.PREFERENCE_ADDRESS_DONATE_SOLANA
 import dev.tobo.omneko.PREFERENCE_CATEGORY_DONATE
 import dev.tobo.omneko.PREFERENCE_CATEGORY_DOWNLOAD
 import dev.tobo.omneko.PREFERENCE_CATEGORY_GENERAL
+import dev.tobo.omneko.PREFERENCE_CATEGORY_METERED_WARNING
 import dev.tobo.omneko.PREFERENCE_DEFAULT_CUSTOM_DOWNLOAD_QUALITY
 import dev.tobo.omneko.PREFERENCE_DEFAULT_DOWNLOAD_QUALITY
 import dev.tobo.omneko.PREFERENCE_DEFAULT_FIRST_RUN
 import dev.tobo.omneko.PREFERENCE_DEFAULT_MAX_COMMENTS
+import dev.tobo.omneko.PREFERENCE_DEFAULT_METERED_WARNING_DOWNLOAD_VIDEO
+import dev.tobo.omneko.PREFERENCE_DEFAULT_METERED_WARNING_UPDATE_YOUTUBEDL
 import dev.tobo.omneko.PREFERENCE_DEFAULT_THEME
 import dev.tobo.omneko.PREFERENCE_DEFAULT_USE_ARIA2C
 import dev.tobo.omneko.PREFERENCE_DOWNLOAD_QUALITY_BEST
@@ -64,6 +67,8 @@ import dev.tobo.omneko.PREFERENCE_KEY_FIRST_RUN
 import dev.tobo.omneko.PREFERENCE_KEY_LANGUAGE
 import dev.tobo.omneko.PREFERENCE_KEY_LINK_ASSOCIATION
 import dev.tobo.omneko.PREFERENCE_KEY_MAX_COMMENTS
+import dev.tobo.omneko.PREFERENCE_KEY_METERED_WARNING_DOWNLOAD_VIDEO
+import dev.tobo.omneko.PREFERENCE_KEY_METERED_WARNING_UPDATE_YOUTUBEDL
 import dev.tobo.omneko.PREFERENCE_KEY_THEME
 import dev.tobo.omneko.PREFERENCE_KEY_UPDATE_YOUTUBEDL
 import dev.tobo.omneko.PREFERENCE_KEY_USE_ARIA2C
@@ -128,12 +133,18 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
     val clipboardManager = LocalClipboardManager.current
     val updating by viewModel.updating.collectAsState()
 
-    val preferences = PreferenceManager.getDefaultSharedPreferences(LocalContext.current)
+    val preferences = PreferenceManager.getDefaultSharedPreferences(context)
     val flowPreferences = FlowSharedPreferences(preferences)
+
     val downloadQualityPreference by flowPreferences.getString(
         PREFERENCE_KEY_DOWNLOAD_QUALITY,
         PREFERENCE_DEFAULT_DOWNLOAD_QUALITY
     ).asFlow().collectAsState(PREFERENCE_DEFAULT_DOWNLOAD_QUALITY)
+
+    val meteredYoutubeDLAlertEnabled by flowPreferences.getBoolean(
+        PREFERENCE_KEY_METERED_WARNING_UPDATE_YOUTUBEDL,
+        PREFERENCE_DEFAULT_METERED_WARNING_UPDATE_YOUTUBEDL
+    ).asFlow().collectAsState(PREFERENCE_DEFAULT_METERED_WARNING_UPDATE_YOUTUBEDL)
 
     var showMeteredAlertDialog by remember { mutableStateOf(false) }
 
@@ -148,7 +159,7 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                 putBoolean(PREFERENCE_KEY_FIRST_RUN, false)
             }
 
-            if (isConnectionMetered(context)) {
+            if (meteredYoutubeDLAlertEnabled && isConnectionMetered(context)) {
                 showMeteredAlertDialog = true
             } else {
                 viewModel.updateYoutubeDL(context)
@@ -197,7 +208,7 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                         summary = { Text(stringResource(R.string.update_youtubedl_button_summary)) },
                         enabled = !updating
                     ) {
-                        if (isConnectionMetered(context)) {
+                        if (meteredYoutubeDLAlertEnabled && isConnectionMetered(context)) {
                             showMeteredAlertDialog = true
                         } else {
                             viewModel.updateYoutubeDL(context)
@@ -281,6 +292,25 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                             summary = { Text(stringResource(R.string.preference_footer_custom_download_quality)) }
                         )
                     }
+
+                    preferenceCategory(
+                        key = PREFERENCE_CATEGORY_METERED_WARNING,
+                        title = { Text(stringResource(R.string.preference_category_metered_warning)) }
+                    )
+
+                    switchPreference(
+                        key = PREFERENCE_KEY_METERED_WARNING_UPDATE_YOUTUBEDL,
+                        defaultValue = PREFERENCE_DEFAULT_METERED_WARNING_UPDATE_YOUTUBEDL,
+                        title = { Text(stringResource(R.string.preference_metered_alert_update_youtubedl_title)) },
+                        summary = { Text(stringResource(R.string.preference_metered_alert_update_youtubedl_summary)) }
+                    )
+
+                    switchPreference(
+                        key = PREFERENCE_KEY_METERED_WARNING_DOWNLOAD_VIDEO,
+                        defaultValue = PREFERENCE_DEFAULT_METERED_WARNING_DOWNLOAD_VIDEO,
+                        title = { Text(stringResource(R.string.preference_metered_alert_download_video_title)) },
+                        summary = { Text(stringResource(R.string.preference_metered_alert_download_video_summary)) }
+                    )
 
                     preferenceCategory(
                         key = PREFERENCE_CATEGORY_DONATE,
