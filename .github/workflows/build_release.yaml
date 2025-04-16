@@ -101,7 +101,7 @@ jobs:
             | omneko-${{ github.ref_name }}-armeabi-v7a-release.apk | ${{ env.APK_ARMEABI_V7A_CHECKSUM }} |
             | omneko-${{ github.ref_name }}-arm64-v8a-release.apk | ${{ env.APK_ARM64_V8A_CHECKSUM }} |
           draft: true
-          prerelease: ${{ contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') }}
+          prerelease: ${{ contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') || contains(github.ref_name, 'rc') }}
           files: |
             app/build/outputs/omneko-${{ github.ref_name }}-universal-release.apk
             app/build/outputs/omneko-${{ github.ref_name }}-x86-release.apk
