@@ -2,6 +2,7 @@ package dev.tobo.omneko.activity
 
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -121,9 +122,9 @@ fun downloadQualityString(context: Context, setting: String): String {
     }
 }
 
-fun isConnectionMetered(): Boolean {
-    // TODO implement this function
-    return true
+fun isConnectionMetered(context: Context): Boolean {
+    val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
+    return connectivityManager.isActiveNetworkMetered
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -153,7 +154,7 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                 putBoolean(PREFERENCE_KEY_FIRST_RUN, false)
             }
 
-            if (isConnectionMetered()) {
+            if (isConnectionMetered(context)) {
                 showMeteredAlertDialog = true
             } else {
                 viewModel.updateYoutubeDL(context)
@@ -199,7 +200,7 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                         summary = { Text(stringResource(R.string.update_youtubedl_button_summary)) },
                         enabled = !updating
                     ) {
-                        if (isConnectionMetered()) {
+                        if (isConnectionMetered(context)) {
                             showMeteredAlertDialog = true
                         } else {
                             viewModel.updateYoutubeDL(context)
