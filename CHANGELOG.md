@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Button for changing the app language
 - Donation addresses
-- Trying to update YoutubeDL will now warn you if you're on a metered connection
+- Trying to update YoutubeDL or watching a video will now warn you if your connection is metered
 
 ### Changed
 
