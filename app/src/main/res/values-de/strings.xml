@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="first_run_update_youtubedl_toast">Erster start, YoutubeDL wird aktualisiert</string>
+    <string name="first_run_update_youtubedl_toast">Erster Start, YoutubeDL wird aktualisiert</string>
     <string name="update_youtubedl_button">YoutubeDL aktualisieren</string>
-    <string name="update_youtubedl_button_summary">Solltest du beim anschauen von Videos probleme haben, versuche YoutubeDL zu aktualisieren</string>
+    <string name="update_youtubedl_button_summary">Solltest du beim anschauen von Videos Probleme haben, versuche YoutubeDL zu aktualisieren</string>
     <string name="link_association_button">Linkassoziationen bearbeiten</string>
-    <string name="link_association_button_summary">Hier kannst du einstellen, welche links automatisch geöffnet werden sollen</string>
+    <string name="link_association_button_summary">Hier kannst du einstellen, welche Links automatisch geöffnet werden sollen</string>
     <string name="language_button">Sprache</string>
     <string name="language_button_summary">Du wirst in die Systemeinstellungen weitergeleitet um die Sprache der App zu ändern</string>
     <string name="theme_follow_system">Systemeinstellung folgen</string>
@@ -19,15 +19,15 @@
     <string name="preference_category_metered_warning">Warnungen bei getakteter Verbindung</string>
     <string name="preference_category_donate">Spenden</string>
     <string name="preference_theme_title">Aussehen</string>
-    <string name="preference_max_comments_title">Maximale anzahl an herunterzuladenen Kommentaren</string>
+    <string name="preference_max_comments_title">Maximale Anzahl an herunterzuladenen Kommentaren</string>
     <string name="preference_use_aria2c_title">Nutze zum Herunterladen Aria2c</string>
     <string name="preference_use_aria2c_summary">Probiere beides aus, um zu sehen, welche Einstellung dir die geringsten Ladezeiten bietet</string>
     <string name="preference_download_quality_title">Downloadqualität</string>
     <string name="preference_custom_download_quality_title">Benutzerdefinierte Downloadqualität</string>
-    <string name="preference_footer_custom_download_quality">Das Feld für die benutzerdefinierte Downloadqualität erwartet eine für yt-dlp über den \"-S\" parameter lesbare Zeichenkette, welchem automatisch \"ext:mp4\" vorangestellt wird. Ungültige Eingaben können zum Fehlschlagen von Downloads führen. Solltest du dir unsicher sein, nutze eines der vorgegebenen Qualitätsprofile.</string>
-    <string name="preference_metered_alert_update_youtubedl_title">Getaktete Verbingung beim Update von YoutubeDL</string>
+    <string name="preference_footer_custom_download_quality">Das Feld für die benutzerdefinierte Downloadqualität erwartet eine für yt-dlp über den \"-S\" Parameter lesbare Zeichenkette, welcher automatisch \"ext:mp4\" vorangestellt wird. Ungültige Eingaben können zum Fehlschlagen von Downloads führen. Solltest du dir unsicher sein, nutze eines der vorgegebenen Qualitätsprofile.</string>
+    <string name="preference_metered_alert_update_youtubedl_title">Getaktete Verbindung beim Update von YoutubeDL</string>
     <string name="preference_metered_alert_update_youtubedl_summary">Zeige eine Warnung vor dem Update von YoutubeDL bei einer getakteten Verbindung</string>
-    <string name="preference_metered_alert_download_video_title">Getaktete Verbingung beim Download eines Videos</string>
+    <string name="preference_metered_alert_download_video_title">Getaktete Verbindung beim Download eines Videos</string>
     <string name="preference_metered_alert_download_video_summary">Zeige eine Warnung vor dem Download eines Videos bei einer getakteten Verbindung</string>
     <string name="metered_alert_dialog_title">Getaktete Verbindung</string>
     <string name="metered_alert_dialog_update_youtubedl_text">Deine Verbindung ist aktuell getaktet. Bist du sicher, dass du YoutubeDL aktualisieren willst?</string>
