@@ -8,3 +8,8 @@ updates:
     directory: /
     schedule:
       interval: daily
+    groups:
+      youtubedl-android:
+        patterns:
+          - "io.github.junkfood02.youtubedl-android:*"
+    
