@@ -51,6 +51,7 @@ data class PlayerState(
     val commentsRunning: Boolean = false,
     val completed: Boolean = false,
     val commentsCompleted: Boolean = false,
+    val videoId: String = "video-id",
     val channel: String = "Channel",
     val uploader: String = "Uploader",
     val uploaderUrl: String = "",
@@ -111,6 +112,7 @@ class PlayerViewModel : ViewModel() {
         if (!_playerState.value.running && !_playerState.value.completed) {
             _playerState.update { currentState ->
                 currentState.copy(
+                    videoId = "",
                     channel = "",
                     uploader = "",
                     uploaderUrl = "",
@@ -182,6 +184,7 @@ class PlayerViewModel : ViewModel() {
 
                         _playerState.update { currentState ->
                             currentState.copy(
+                                videoId = jsonObject["id"]?.jsonPrimitive?.content ?: "",
                                 channel = jsonObject["channel"]?.jsonPrimitive?.content ?: "",
                                 uploader = jsonObject["uploader"]?.jsonPrimitive?.content ?: "",
                                 uploaderUrl = jsonObject["uploader_url"]?.jsonPrimitive?.content ?: "",

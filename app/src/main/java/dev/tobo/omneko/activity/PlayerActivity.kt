@@ -232,7 +232,7 @@ fun VideoPlayer(videoUri: Uri?, viewModel: PlayerViewModel = viewModel()) {
                                     addCategory(Intent.CATEGORY_OPENABLE)
                                     type = "video/mp4"
 
-                                    putExtra(Intent.EXTRA_TITLE, "video.mp4")
+                                    putExtra(Intent.EXTRA_TITLE, "omneko_download_${playerState.videoId}.mp4")
                                     putExtra(DocumentsContract.EXTRA_INITIAL_URI, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS))
                                 }
 
