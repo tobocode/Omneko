@@ -7,12 +7,17 @@ const val PREFERENCE_DEFAULT_FIRST_RUN = true
 const val PREFERENCE_CATEGORY_GENERAL = "category_general"
 const val PREFERENCE_CATEGORY_DOWNLOAD = "category_download"
 const val PREFERENCE_CATEGORY_METERED_WARNING = "category_metered_warning"
+const val PREFERENCE_CATEGORY_INFO = "category_info"
 const val PREFERENCE_CATEGORY_DONATE = "category_donate"
 
 // Button preferences
 const val PREFERENCE_KEY_UPDATE_YOUTUBEDL = "button_update_youtubedl"
 const val PREFERENCE_KEY_LINK_ASSOCIATION = "button_link_association"
 const val PREFERENCE_KEY_LANGUAGE = "button_language"
+const val PREFERENCE_KEY_AUTHOR = "button_author"
+const val PREFERENCE_KEY_VERSION = "button_version"
+const val PREFERENCE_KEY_LICENSE = "button_license"
+const val PREFERENCE_KEY_GITHUB = "button_github"
 
 // Donation preferences
 const val PREFERENCE_KEY_DONATE_MONERO = "donate_monero"

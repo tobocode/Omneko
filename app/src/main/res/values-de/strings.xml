@@ -17,6 +17,7 @@
     <string name="preference_category_general">Allgemein</string>
     <string name="preference_category_download">Herunterladen</string>
     <string name="preference_category_metered_warning">Warnungen bei getakteter Verbindung</string>
+    <string name="preference_category_info">Über</string>
     <string name="preference_category_donate">Spenden</string>
     <string name="preference_theme_title">Aussehen</string>
     <string name="preference_max_comments_title">Maximale Anzahl an herunterzuladenen Kommentaren</string>
@@ -34,6 +35,11 @@
     <string name="metered_alert_dialog_download_video_text">Deine Verbindung ist aktuell getaktet. Bist du sicher, dass du das Video herunterladen willst?</string>
     <string name="metered_alert_dialog_confirm">Ja</string>
     <string name="metered_alert_dialog_dismiss">Nein</string>
+    <string name="preference_info_author_title">Entwickler</string>
+    <string name="preference_info_version_title">App Version</string>
+    <string name="preference_info_version_summary">Version %1$s</string>
+    <string name="preference_info_license_title">Lizenz</string>
+    <string name="preference_info_github_title">Quellcode auf GitHub</string>
     <string name="updating_youtubedl_toast">YoutubeDL wird aktualisiert</string>
     <string name="youtubedl_update_complete_toast">Update abgeschlossen</string>
     <string name="youtubedl_update_failed_toast">Update fehlgeschlagen</string>

@@ -25,6 +25,7 @@
     <string name="preference_category_general">General</string>
     <string name="preference_category_download">Download</string>
     <string name="preference_category_metered_warning">Metered connection warnings</string>
+    <string name="preference_category_info">About</string>
     <string name="preference_category_donate">Donate</string>
 
     <string name="preference_theme_title">Theme</string>
@@ -45,6 +46,12 @@
     <string name="metered_alert_dialog_download_video_text">You are currently using a metered connection. Are you sure you want to download the video now?</string>
     <string name="metered_alert_dialog_confirm">Yes</string>
     <string name="metered_alert_dialog_dismiss">No</string>
+
+    <string name="preference_info_author_title">Developer</string>
+    <string name="preference_info_version_title">App version</string>
+    <string name="preference_info_version_summary">Version %1$s</string>
+    <string name="preference_info_license_title">License</string>
+    <string name="preference_info_github_title">Source code on GitHub</string>
 
     <!-- MainViewModel -->
     <string name="updating_youtubedl_toast">Now updating YoutubeDL</string>

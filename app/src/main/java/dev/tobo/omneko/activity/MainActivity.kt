@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -46,6 +47,7 @@ import dev.tobo.omneko.PREFERENCE_ADDRESS_DONATE_SOLANA
 import dev.tobo.omneko.PREFERENCE_CATEGORY_DONATE
 import dev.tobo.omneko.PREFERENCE_CATEGORY_DOWNLOAD
 import dev.tobo.omneko.PREFERENCE_CATEGORY_GENERAL
+import dev.tobo.omneko.PREFERENCE_CATEGORY_INFO
 import dev.tobo.omneko.PREFERENCE_CATEGORY_METERED_WARNING
 import dev.tobo.omneko.PREFERENCE_DEFAULT_CUSTOM_DOWNLOAD_QUALITY
 import dev.tobo.omneko.PREFERENCE_DEFAULT_DOWNLOAD_QUALITY
@@ -59,12 +61,15 @@ import dev.tobo.omneko.PREFERENCE_DOWNLOAD_QUALITY_BEST
 import dev.tobo.omneko.PREFERENCE_DOWNLOAD_QUALITY_CUSTOM
 import dev.tobo.omneko.PREFERENCE_DOWNLOAD_QUALITY_WORST
 import dev.tobo.omneko.PREFERENCE_FOOTER_CUSTOM_DOWNLOAD_QUALITY
+import dev.tobo.omneko.PREFERENCE_KEY_AUTHOR
 import dev.tobo.omneko.PREFERENCE_KEY_CUSTOM_DOWNLOAD_QUALITY
 import dev.tobo.omneko.PREFERENCE_KEY_DONATE_MONERO
 import dev.tobo.omneko.PREFERENCE_KEY_DONATE_SOLANA
 import dev.tobo.omneko.PREFERENCE_KEY_DOWNLOAD_QUALITY
 import dev.tobo.omneko.PREFERENCE_KEY_FIRST_RUN
+import dev.tobo.omneko.PREFERENCE_KEY_GITHUB
 import dev.tobo.omneko.PREFERENCE_KEY_LANGUAGE
+import dev.tobo.omneko.PREFERENCE_KEY_LICENSE
 import dev.tobo.omneko.PREFERENCE_KEY_LINK_ASSOCIATION
 import dev.tobo.omneko.PREFERENCE_KEY_MAX_COMMENTS
 import dev.tobo.omneko.PREFERENCE_KEY_METERED_WARNING_DOWNLOAD_VIDEO
@@ -72,6 +77,7 @@ import dev.tobo.omneko.PREFERENCE_KEY_METERED_WARNING_UPDATE_YOUTUBEDL
 import dev.tobo.omneko.PREFERENCE_KEY_THEME
 import dev.tobo.omneko.PREFERENCE_KEY_UPDATE_YOUTUBEDL
 import dev.tobo.omneko.PREFERENCE_KEY_USE_ARIA2C
+import dev.tobo.omneko.PREFERENCE_KEY_VERSION
 import dev.tobo.omneko.PREFERENCE_LIST_MAX_COMMENTS
 import dev.tobo.omneko.PREFERENCE_THEME_DARK
 import dev.tobo.omneko.PREFERENCE_THEME_LIGHT
@@ -311,6 +317,62 @@ fun MainLayout(modifier: Modifier = Modifier, viewModel: MainViewModel = viewMod
                         title = { Text(stringResource(R.string.preference_metered_alert_download_video_title)) },
                         summary = { Text(stringResource(R.string.preference_metered_alert_download_video_summary)) }
                     )
+
+                    preferenceCategory(
+                        key = PREFERENCE_CATEGORY_INFO,
+                        title = { Text(stringResource(R.string.preference_category_info)) }
+                    )
+
+                    preference(
+                        key = PREFERENCE_KEY_AUTHOR,
+                        title = { Text(stringResource(R.string.preference_info_author_title)) },
+                        summary = { Text("Tobias Wienkoop") },
+                        icon = {
+                            Icon(imageVector = Icons.AutoMirrored.Filled.OpenInNew, contentDescription = "Open in new")
+                        }
+                    ) {
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            "https://github.com/tobocode".toUri()
+                        )
+
+                        context.startActivity(intent)
+                    }
+
+                    preference(
+                        key = PREFERENCE_KEY_VERSION,
+                        title = { Text(stringResource(R.string.preference_info_version_title)) },
+                        summary = {
+                            Text(
+                                stringResource(
+                                    R.string.preference_info_version_summary,
+                                    context.packageManager.getPackageInfo(context.packageName, 0).versionName.toString()
+                                )
+                            )
+                        }
+                    )
+
+                    preference(
+                        key = PREFERENCE_KEY_LICENSE,
+                        title = { Text(stringResource(R.string.preference_info_license_title)) },
+                        summary = { Text("GPL-3.0") }
+                    )
+
+                    preference(
+                        key = PREFERENCE_KEY_GITHUB,
+                        title = { Text(stringResource(R.string.preference_info_github_title)) },
+                        summary = { Text("https://github.com/tobocode/Omneko") },
+                        icon = {
+                            Icon(imageVector = Icons.AutoMirrored.Filled.OpenInNew, contentDescription = "Open in new")
+                        }
+                    ) {
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            "https://github.com/tobocode/Omneko".toUri()
+                        )
+
+                        context.startActivity(intent)
+                    }
 
                     preferenceCategory(
                         key = PREFERENCE_CATEGORY_DONATE,
