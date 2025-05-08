@@ -12,4 +12,7 @@ updates:
       youtubedl-android:
         patterns:
           - "io.github.junkfood02.youtubedl-android:*"
+      androidx:
+        patterns:
+          - "androidx.*"
     
